@@ -25,6 +25,7 @@
 **/.idea/**/indexLayout.xml
 **/.idea/**/projectSettingsUpdater.xml
 **/.idea/**/vcs.xml
+**/.idea/**/encodings.xml
 
 *.suo
 *.user
