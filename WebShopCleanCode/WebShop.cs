@@ -14,19 +14,14 @@ namespace WebShopCleanCode
         Database database = new Database();
         List<Product> products = new List<Product>();
         List<Customer> customers = new List<Customer>();
+        private Strings _strings = new Strings();
 
-        string currentMenu = "main menu";
-        int currentChoice = 1;
-        int amountOfOptions = 3;
-        string option1 = "See Wares";
-        string option2 = "Customer Info";
-        string option3 = "Login";
-        string option4 = "";
-        string info = "What would you like to do?";
+        public int currentChoice = 1;
+        public int amountOfOptions = 3;
 
         string username = null;
         string password = null;
-        Customer currentCustomer;
+        public Customer currentCustomer;
 
         public WebShop()
         {
@@ -39,9 +34,9 @@ namespace WebShopCleanCode
             Console.WriteLine("Welcome to the WebShop!");
             while (running)
             {
-                Console.WriteLine(info);
+                Console.WriteLine(_strings.Info);
                 
-                if (currentMenu.Equals("purchase menu"))
+                if (_strings.currentMenu.Equals("purchase menu"))
                 {
                     for (int i = 0; i < amountOfOptions; i++)
                     {
@@ -51,15 +46,15 @@ namespace WebShopCleanCode
                 }
                 else
                 {
-                    Console.WriteLine("1: " + option1);
-                    Console.WriteLine("2: " + option2);
+                    Console.WriteLine("1: " + _strings.Option1);
+                    Console.WriteLine("2: " + _strings.Option2);
                     if (amountOfOptions > 2)
                     {
-                        Console.WriteLine("3: " + option3);
+                        Console.WriteLine("3: " + _strings.Option3);
                     }
                     if (amountOfOptions > 3)
                     {
-                        Console.WriteLine("4: " + option4);
+                        Console.WriteLine("4: " + _strings.Option4);
                     }
                 }
 
@@ -104,38 +99,38 @@ namespace WebShopCleanCode
                     case "ok":
                     case "k":
                     case "o":
-                        if (currentMenu.Equals("main menu"))
+                        if (_strings.currentMenu.Equals("main menu"))
                         {
                             switch (currentChoice)
                             {
                                 case 1:
-                                    option1 = "See all wares";
-                                    option2 = "Purchase a ware";
-                                    option3 = "Sort wares";
+                                    _strings.Option1 = "See all wares";
+                                    _strings.Option2 = "Purchase a ware";
+                                    _strings.Option3 = "Sort wares";
                                     if (currentCustomer == null)
                                     {
-                                        option4 = "Login";
+                                        _strings.Option4 = "Login";
                                     }
                                     else
                                     {
-                                        option4 = "Logout";
+                                        _strings.Option4 = "Logout";
                                     }
                                     amountOfOptions = 4;
                                     currentChoice = 1;
-                                    currentMenu = "wares menu";
-                                    info = "What would you like to do?";
+                                    _strings.currentMenu = "wares menu";
+                                    _strings.Info = "What would you like to do?";
                                     break;
                                 case 2:
                                     if (currentCustomer != null)
                                     {
-                                        option1 = "See your orders";
-                                        option2 = "Set your info";
-                                        option3 = "Add funds";
-                                        option4 = "";
+                                        _strings.Option1 = "See your orders";
+                                        _strings.Option2 = "Set your info";
+                                        _strings.Option3 = "Add funds";
+                                        _strings.Option4 = "";
                                         amountOfOptions = 3;
                                         currentChoice = 1;
-                                        info = "What would you like to do?";
-                                        currentMenu = "customer menu";
+                                        _strings.Info = "What would you like to do?";
+                                        _strings.currentMenu = "customer menu";
                                     }
                                     else
                                     {
@@ -147,20 +142,20 @@ namespace WebShopCleanCode
                                 case 3:
                                     if (currentCustomer == null)
                                     {
-                                        option1 = "Set Username";
-                                        option2 = "Set Password";
-                                        option3 = "Login";
-                                        option4 = "Register";
+                                        _strings.Option1 = "Set Username";
+                                        _strings.Option2 = "Set Password";
+                                        _strings.Option3 = "Login";
+                                        _strings.Option4 = "Register";
                                         amountOfOptions = 4;
                                         currentChoice = 1;
-                                        info = "Please submit username and password.";
+                                        _strings.Info = "Please submit username and password.";
                                         username = null;
                                         password = null;
-                                        currentMenu = "login menu";
+                                        _strings.currentMenu = "login menu";
                                     }
                                     else
                                     {
-                                        option3 = "Login";
+                                        _strings.Option3 = "Login";
                                         Console.WriteLine();
                                         Console.WriteLine(currentCustomer.Username + " logged out.");
                                         Console.WriteLine();
@@ -175,7 +170,7 @@ namespace WebShopCleanCode
                                     break;
                             }
                         }
-                        else if (currentMenu.Equals("customer menu")) {
+                        else if (_strings.currentMenu.Equals("customer menu")) {
                             switch (currentChoice)
                             {
                                 case 1:
@@ -218,7 +213,7 @@ namespace WebShopCleanCode
                                     break;
                             }
                         }
-                        else if (currentMenu.Equals("sort menu"))
+                        else if (_strings.currentMenu.Equals("sort menu"))
                         {
                             bool back = true;
                             switch (currentChoice)
@@ -256,24 +251,24 @@ namespace WebShopCleanCode
                             }
                             if (back)
                             {
-                                option1 = "See all wares";
-                                option2 = "Purchase a ware";
-                                option3 = "Sort wares";
+                                _strings.Option1 = "See all wares";
+                                _strings.Option2 = "Purchase a ware";
+                                _strings.Option3 = "Sort wares";
                                 if (currentCustomer == null)
                                 {
-                                    option4 = "Login";
+                                    _strings.Option4 = "Login";
                                 }
                                 else
                                 {
-                                    option4 = "Logout";
+                                    _strings.Option4 = "Logout";
                                 }
                                 amountOfOptions = 4;
                                 currentChoice = 1;
-                                currentMenu = "wares menu";
-                                info = "What would you like to do?";
+                                _strings.currentMenu = "wares menu";
+                                _strings.Info = "What would you like to do?";
                             }
                         }
-                        else if (currentMenu.Equals("wares menu"))
+                        else if (_strings.currentMenu.Equals("wares menu"))
                         {
                             switch (currentChoice)
                             {
@@ -288,8 +283,8 @@ namespace WebShopCleanCode
                                 case 2:
                                     if (currentCustomer != null)
                                     {
-                                        currentMenu = "purchase menu";
-                                        info = "What would you like to purchase?";
+                                        _strings.currentMenu = "purchase menu";
+                                        _strings.Info = "What would you like to purchase?";
                                         currentChoice = 1;
                                         amountOfOptions = products.Count;
                                     }
@@ -302,30 +297,30 @@ namespace WebShopCleanCode
                                     }
                                     break;
                                 case 3:
-                                    option1 = "Sort by name, descending";
-                                    option2 = "Sort by name, ascending";
-                                    option3 = "Sort by price, descending";
-                                    option4 = "Sort by price, ascending";
-                                    info = "How would you like to sort them?";
-                                    currentMenu = "sort menu";
+                                    _strings.Option1 = "Sort by name, descending";
+                                    _strings.Option2 = "Sort by name, ascending";
+                                    _strings.Option3 = "Sort by price, descending";
+                                    _strings.Option4 = "Sort by price, ascending";
+                                    _strings.Info = "How would you like to sort them?";
+                                    _strings.currentMenu = "sort menu";
                                     currentChoice = 1;
                                     amountOfOptions = 4;
                                     break;
                                 case 4:
                                     if (currentCustomer == null)
                                     {
-                                        option1 = "Set Username";
-                                        option2 = "Set Password";
-                                        option3 = "Login";
-                                        option4 = "Register";
+                                        _strings.Option1 = "Set Username";
+                                        _strings.Option2 = "Set Password";
+                                        _strings.Option3 = "Login";
+                                        _strings.Option4 = "Register";
                                         amountOfOptions = 4;
-                                        info = "Please submit username and password.";
+                                        _strings.Info = "Please submit username and password.";
                                         currentChoice = 1;
-                                        currentMenu = "login menu";
+                                        _strings.currentMenu = "login menu";
                                     }
                                     else
                                     {
-                                        option4 = "Login";
+                                        _strings.Option4 = "Login";
                                         Console.WriteLine();
                                         Console.WriteLine(currentCustomer.Username + " logged out.");
                                         Console.WriteLine();
@@ -342,7 +337,7 @@ namespace WebShopCleanCode
                                     break;
                             }
                         }
-                        else if (currentMenu.Equals("login menu"))
+                        else if (_strings.currentMenu.Equals("login menu"))
                         {
                             switch (currentChoice)
                             {
@@ -377,18 +372,18 @@ namespace WebShopCleanCode
                                                 Console.WriteLine();
                                                 currentCustomer = customer;
                                                 found = true;
-                                                option1 = "See Wares";
-                                                option2 = "Customer Info";
+                                                _strings.Option1 = "See Wares";
+                                                _strings.Option2 = "Customer Info";
                                                 if (currentCustomer == null)
                                                 {
-                                                    option3 = "Login";
+                                                    _strings.Option3 = "Login";
                                                 }
                                                 else
                                                 {
-                                                    option3 = "Logout";
+                                                    _strings.Option3 = "Logout";
                                                 }
-                                                info = "What would you like to do?";
-                                                currentMenu = "main menu";
+                                                _strings.Info = "What would you like to do?";
+                                                _strings.currentMenu = "main menu";
                                                 currentChoice = 1;
                                                 amountOfOptions = 3;
                                                 break;
@@ -663,18 +658,18 @@ namespace WebShopCleanCode
                                     Console.WriteLine();
                                     Console.WriteLine(newCustomer.Username + " successfully added and is now logged in.");
                                     Console.WriteLine();
-                                    option1 = "See Wares";
-                                    option2 = "Customer Info";
+                                    _strings.Option1 = "See Wares";
+                                    _strings.Option2 = "Customer Info";
                                     if (currentCustomer == null)
                                     {
-                                        option3 = "Login";
+                                        _strings.Option3 = "Login";
                                     }
                                     else
                                     {
-                                        option3 = "Logout";
+                                        _strings.Option3 = "Logout";
                                     }
-                                    info = "What would you like to do?";
-                                    currentMenu = "main menu";
+                                    _strings.Info = "What would you like to do?";
+                                    _strings.currentMenu = "main menu";
                                     currentChoice = 1;
                                     amountOfOptions = 3;
                                     break;
@@ -685,7 +680,7 @@ namespace WebShopCleanCode
                                     break;
                             }
                         }
-                        else if (currentMenu.Equals("purchase menu"))
+                        else if (_strings.currentMenu.Equals("purchase menu"))
                         {
                             int index = currentChoice - 1;
                             Product product = products[index];
@@ -717,44 +712,44 @@ namespace WebShopCleanCode
                         break;
                     case "back":
                     case "b":
-                        if (currentMenu.Equals("main menu"))
+                        if (_strings.currentMenu.Equals("main menu"))
                         {
                             Console.WriteLine();
                             Console.WriteLine("You're already on the main menu.");
                             Console.WriteLine();
                         }
-                        else if (currentMenu.Equals("purchase menu"))
+                        else if (_strings.currentMenu.Equals("purchase menu"))
                         {
-                            option1 = "See all wares";
-                            option2 = "Purchase a ware";
-                            option3 = "Sort wares";
+                            _strings.Option1 = "See all wares";
+                            _strings.Option2 = "Purchase a ware";
+                            _strings.Option3 = "Sort wares";
                             if (currentCustomer == null)
                             {
-                                option4 = "Login";
+                                _strings.Option4 = "Login";
                             }
                             else
                             {
-                                option4 = "Logout";
+                                _strings.Option4 = "Logout";
                             }
                             amountOfOptions = 4;
                             currentChoice = 1;
-                            currentMenu = "wares menu";
-                            info = "What would you like to do?";
+                            _strings.currentMenu = "wares menu";
+                            _strings.Info = "What would you like to do?";
                         }
                         else
                         {
-                            option1 = "See Wares";
-                            option2 = "Customer Info";
+                            _strings.Option1 = "See Wares";
+                            _strings.Option2 = "Customer Info";
                             if (currentCustomer == null)
                             {
-                                option3 = "Login";
+                                _strings.Option3 = "Login";
                             }
                             else
                             {
-                                option3 = "Logout";
+                                _strings.Option3 = "Logout";
                             }
-                            info = "What would you like to do?";
-                            currentMenu = "main menu";
+                            _strings.Info = "What would you like to do?";
+                            _strings.currentMenu = "main menu";
                             currentChoice = 1;
                             amountOfOptions = 3;
                         }

@@ -4,8 +4,11 @@
     {
         public static void Main(string[] args)
         {
-            WebShop webShop = new WebShop();
-            webShop.Run();
+            WebShopMenu webShopMenu = new WebShopMenu();
+            webShopMenu.WebShopMainMenu();
+            
+            // WebShop webShop = new WebShop();
+            // webShop.Run();
         }
     }
 }
