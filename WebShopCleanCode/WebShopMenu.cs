@@ -5,17 +5,37 @@ namespace WebShopCleanCode;
 public class WebShopMenu
 {
     private readonly Dictionary<string, ICommand> _commands;
-    private readonly List<string> _options;
+    private List<string> _options;
     private string _quitCommand;
     private WebShop _webShop;
     private Strings _strings;
+    private int _currentChoice;
     private int _amountOfOptions;
-    private Customer _currentCustomer;
+    public string Username = null;
+    public string Password = null;
     
     public int CurrentChoice
     {
-        get => _webShop.currentChoice;
-        set => _webShop.currentChoice = value;
+        get => _currentChoice;
+        set => _currentChoice = value;
+    }
+
+    public int AmountOfOptions
+    {
+        get => _amountOfOptions;
+        set => _amountOfOptions = value;
+    }
+
+    public List<string> Options
+    {
+        get => _options;
+        set => _options = value;
+    }
+
+    public Customer CurrentCustomer
+    {
+        get => _webShop.currentCustomer;
+        set => _webShop.currentCustomer = value;
     }
 
     public WebShopMenu(WebShop webShop, Dictionary<string, ICommand> commands, List<string> options, string quitCommand)
@@ -34,23 +54,29 @@ public class WebShopMenu
         _strings = new Strings();
         _commands = new Dictionary<string, ICommand>();
         _options = new List<string>();
-        _options.Add(_strings.Option1);
-        _options.Add(_strings.Option2);
-        _options.Add(_strings.Option3);
-        _options.Add(_strings.Option4);
-        _options.Add(_strings.Info);
+        Options.Add(_strings.Option1);
+        Options.Add(_strings.Option2);
+        Options.Add(_strings.Option3);
+        Options.Add(_strings.Option4);
         _quitCommand = _strings.Quit;
-        _commands.Add("left", new LeftCommand(_webShop));
-        _commands.Add("right", new RightCommand(_webShop));
+        _commands.Add("left", new LeftCommand(this));
+        _commands.Add("l", new LeftCommand(this));
+        
+        //_commands.Add(ConsoleKey.LeftArrow.ToString(), new LeftCommand(_webShop));
+        
+        _commands.Add("right", new RightCommand(this));
+        _commands.Add("r", new RightCommand(this));
+        
+        _commands.Add("ok", new OkCommand(_webShop, this));
+        _commands.Add("o", new OkCommand(_webShop, this));
+        _commands.Add("k", new OkCommand(_webShop, this));
     }
-
     
-
     private void CreateWebShop()
     {
-        _currentCustomer = _webShop.currentCustomer;
-        CurrentChoice = _webShop.currentChoice;
-        _amountOfOptions = _webShop.amountOfOptions;
+        CurrentCustomer = _webShop.currentCustomer;
+        CurrentChoice = 1;
+        AmountOfOptions = 3;
     }
 
     public void WebShopMainMenu()
@@ -69,15 +95,21 @@ public class WebShopMenu
     }
     private void PrintOptions()
     {
-        foreach (string option in _options)
+        var optionNum = 1;
+        foreach (string option in Options)
         {
-            Console.WriteLine(option);
+            if(!string.IsNullOrEmpty(option))
+                Console.WriteLine(optionNum++ + ": " + option);
+            if (_amountOfOptions <= 3 && optionNum == 4)
+            {
+                return;
+            }
         }
     }
 
     private void PrintNavigation()
     {
-        for (int i = 0; i < _amountOfOptions; i++)
+        for (int i = 0; i < AmountOfOptions; i++)
         {
             Console.Write(i + 1 + "\t");
         }
@@ -89,7 +121,7 @@ public class WebShopMenu
         Console.WriteLine("|");
 
         Console.WriteLine("Your buttons are Left, Right, OK, Back and Quit.");
-        DisplayUser(_currentCustomer);
+        DisplayUser(CurrentCustomer);
 
     }
 

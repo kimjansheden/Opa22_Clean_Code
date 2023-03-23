@@ -6,9 +6,6 @@
         {
             WebShopMenu webShopMenu = new WebShopMenu();
             webShopMenu.WebShopMainMenu();
-            
-            // WebShop webShop = new WebShop();
-            // webShop.Run();
         }
     }
 }

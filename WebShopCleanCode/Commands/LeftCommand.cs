@@ -1,17 +1,17 @@
+using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode;
-
-public class LeftCommand : Interfaces.ICommand
+public class LeftCommand : ICommand
 {
-    private readonly WebShop _webShop;
-    public LeftCommand(WebShop webShop)
+    private readonly WebShopMenu _webShopMenu;
+    public LeftCommand(WebShopMenu webShopMenu)
     {
-        _webShop = webShop;
+        _webShopMenu = webShopMenu;
     }
     public void Execute()
     {
-        if (_webShop.currentChoice > 1)
+        if (_webShopMenu.CurrentChoice > 1)
         {
-            _webShop.currentChoice--;
+            _webShopMenu.CurrentChoice--;
         }
     }
 }
