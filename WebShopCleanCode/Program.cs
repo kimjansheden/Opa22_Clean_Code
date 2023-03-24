@@ -4,8 +4,9 @@
     {
         public static void Main(string[] args)
         {
-            WebShopMenu webShopMenu = new WebShopMenu();
-            webShopMenu.WebShopMainMenu();
+            // WebShopMenu webShopMenu = new WebShopMenu();
+            WebShopMenu webShopMenu = new WebShopMenu(loggedInCustomer: true);
+            webShopMenu.Run();
         }
     }
 }
