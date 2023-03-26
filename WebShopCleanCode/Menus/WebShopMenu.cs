@@ -5,7 +5,6 @@ namespace WebShopCleanCode;
 public class WebShopMenu : IMenu
 {
     private readonly Dictionary<string, ICommand> _commands;
-
     private Dictionary<string, IMenu> _menus;
     private List<string> _options;
     private string _quitCommand;
@@ -15,10 +14,7 @@ public class WebShopMenu : IMenu
     private int _amountOfOptions;
     public string Username = null;
     public string Password = null;
-
-    public PurchaseMenu PurchaseMenu;
-    public MainMenu MainMenu;
-    public WaresMenu WaresMenu;
+    private ICommand _currentCommand = null;
 
     public int CurrentChoice
     {
@@ -50,6 +46,12 @@ public class WebShopMenu : IMenu
         set => _strings = value;
     }
 
+    public Dictionary<string, IMenu> Menus
+    {
+        get => _menus;
+        set => _menus = value;
+    }
+
     /// <summary>
     /// Custom constructor.
     /// </summary>
@@ -63,7 +65,7 @@ public class WebShopMenu : IMenu
         _webShop = webShop;
         _commands = commands;
         _options = options;
-        _menus = menus;
+        Menus = menus;
         CreateWebShop(defaultConstructor: false);
         _quitCommand = quitCommand;
     }
@@ -74,31 +76,30 @@ public class WebShopMenu : IMenu
     public WebShopMenu()
     {
         _webShop = new WebShop();
-        Strings = new Strings();
+        _strings = new Strings();
         CreateWebShop(defaultConstructor: true);
         _commands = new Dictionary<string, ICommand>();
         _options = new List<string>();
-        _menus = new Dictionary<string, IMenu>();
-        
+        Menus = new Dictionary<string, IMenu>();
+
+        CreateDefaultOptions();
+        CreateDefaultMenus();
+        CreateDefaultCommands();
+    }
+
+    private void CreateDefaultOptions()
+    {
         _options.Add(Strings.Option1);
         _options.Add(Strings.Option2);
         _options.Add(Strings.Option3);
         _options.Add(Strings.Option4);
-        
-        CreateDefaultMenus();
-
-        CreateDefaultCommands();
     }
 
     private void CreateDefaultMenus()
     {
-        PurchaseMenu = new PurchaseMenu(_webShop, this);
-        MainMenu = new MainMenu(this);
-        WaresMenu = new WaresMenu(_webShop, this);
-
-        _menus.Add("main menu", MainMenu);
-        _menus.Add("purchase menu", PurchaseMenu);
-        _menus.Add("wares menu", WaresMenu);
+        Menus.Add("wares menu", new WaresMenu(_webShop, this));
+        Menus.Add("main menu", new MainMenu(this, _webShop));
+        Menus.Add("purchase menu", new PurchaseMenu(_webShop, this));
     }
 
     private void CreateDefaultCommands()
@@ -107,8 +108,6 @@ public class WebShopMenu : IMenu
 
         _commands.Add("left", new LeftCommand(this));
         _commands.Add("l", new LeftCommand(this));
-
-        //_commands.Add(ConsoleKey.LeftArrow.ToString(), new LeftCommand(_webShop));
 
         _commands.Add("right", new RightCommand(this));
         _commands.Add("r", new RightCommand(this));
@@ -157,10 +156,9 @@ public class WebShopMenu : IMenu
         Console.WriteLine(Strings.MainMenuWelcome);
         string input = "";
         
-        // Jag måste stödja "q" här också, så hade behövt göra så man kan skicka in multiple quit commands, för jag kan inte hårdkoda in det här när det inte är säkert att man ens använder ordet "quit" i sin custom constructor.
-        while (!input.Equals(Strings.Quit))
+        while (_currentCommand is not QuitCommand)
         {
-            _menus[_strings.currentMenu].Run();
+            Menus[_strings.currentMenu].Run();
             PrintOptions();
             PrintNavigation();
 
@@ -205,10 +203,19 @@ public class WebShopMenu : IMenu
         if (_commands.ContainsKey(input))
         {
             _commands[input].Execute();
+            _currentCommand = _commands[input];
         }
         else
         {
-            Console.WriteLine("There was no such command.");
+            Console.WriteLine("That is not an applicable option.");
+        }
+    }
+
+    public void ClearAllOptions()
+    {
+        for (int i = 0; i < _options.Count; i++)
+        {
+            _options[i] = "";
         }
     }
 }

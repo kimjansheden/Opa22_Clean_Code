@@ -15,6 +15,11 @@ public class PurchaseMenu : IMenu
         set => _webShopMenu.AmountOfOptions = value;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="webShop"></param>
+    /// <param name="webShopMenu"></param>
     public PurchaseMenu(WebShop webShop, WebShopMenu webShopMenu)
     {
         _webShop = webShop;
@@ -28,5 +33,6 @@ public class PurchaseMenu : IMenu
             Console.WriteLine(i + 1 + ": " + _webShop.products[i].Name + ", " + _webShop.products[i].Price + "kr");
         }
         Console.WriteLine("Your funds: " + _webShop.currentCustomer.Funds);
+        _webShopMenu.ClearAllOptions();
     }
 }
