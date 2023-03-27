@@ -25,9 +25,9 @@ public class WaresMenu : IMenu
     public void Run()
     {
         // Coming from Main menu (OkCommand Line 21)
-        _webShopMenu.Options[0] = "See all wares";
-        _webShopMenu.Options[1] = "Purchase a ware";
-        _webShopMenu.Options[2] = "Sort wares";
+        _webShopMenu.Options[0] = _strings.Wares.Option1;
+        _webShopMenu.Options[1] = _strings.Wares.Option1;
+        _webShopMenu.Options[2] = _strings.Wares.Option1;
         if (_webShop.currentCustomer == null)
         {
             _webShopMenu.Options[3] = "Login";
@@ -37,7 +37,7 @@ public class WaresMenu : IMenu
             _webShopMenu.Options[3] = "Logout";
         }
         _webShopMenu.AmountOfOptions = 4;
-        _strings.currentMenu = "wares menu";
+        _webShopMenu.CurrentMenu = _strings.WaresMenu;
         _strings.MainMenuWhat = "What would you like to do?";
     }
 }

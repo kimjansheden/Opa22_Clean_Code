@@ -1,4 +1,6 @@
-﻿namespace WebShopCleanCode
+﻿using WebShopCleanCode.Interfaces;
+
+namespace WebShopCleanCode
 {
     public class WebShop
     {
@@ -8,6 +10,13 @@
         public List<Customer> customers = new List<Customer>();
         private Strings _strings = new Strings();
         public Customer currentCustomer;
+        private ILoginState _loginState;
+        
+        public ILoginState LoginState
+        {
+            get => _loginState;
+            set => _loginState = value;
+        }
 
         public WebShop()
         {

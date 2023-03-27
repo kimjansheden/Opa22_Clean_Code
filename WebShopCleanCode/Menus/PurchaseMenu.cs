@@ -8,6 +8,7 @@ public class PurchaseMenu : IMenu
     
     private readonly WebShop _webShop;
     private readonly WebShopMenu _webShopMenu;
+    private Strings _strings;
 
     public int AmountOfOptions
     {
@@ -24,6 +25,7 @@ public class PurchaseMenu : IMenu
     {
         _webShop = webShop;
         _webShopMenu = webShopMenu;
+        _strings = webShopMenu.Strings;
     }
 
     public void Run()
@@ -34,5 +36,6 @@ public class PurchaseMenu : IMenu
         }
         Console.WriteLine("Your funds: " + _webShop.currentCustomer.Funds);
         _webShopMenu.ClearAllOptions();
+        _webShopMenu.CurrentMenu = _strings.PurchaseMenu;
     }
 }
