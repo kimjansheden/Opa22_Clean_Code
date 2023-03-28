@@ -7,6 +7,8 @@ public class Strings
     public MainStrings Main = new MainStrings();
     public WaresStrings Wares = new WaresStrings();
     public LoginStrings Login = new LoginStrings();
+    public CustomerInfoStrings Customer = new CustomerInfoStrings();
+    public SortStrings Sort = new SortStrings();
 
     public class MainStrings
     {
@@ -14,6 +16,22 @@ public class Strings
         public string Option2 = "Customer Info";
         public string Option3 = "Login";
         public string Option4 = "";
+    }
+
+    public class SortStrings
+    {
+        public string Option1 = "Sort by name, descending";
+        public string Option2 = "Sort by name, ascending";
+        public string Option3 = "Sort by price, descending";
+        public string Option4 = "Sort by price, ascending";
+        public string How = "How would you like to sort them?";
+    }
+
+    public class CustomerInfoStrings
+    {
+        public string Option1 = "See your orders";
+        public string Option2 = "See your info";
+        public string Option3 = "Add funds";
     }
 
     public class WaresStrings
@@ -28,21 +46,18 @@ public class Strings
         public string Option2  = "Set Password";
         public string Option3  = "Login";
         public string Option4  = "Register";
+        public string Menu = "Please submit username and password.";
+        public string AKeyBoard = "A keyboard appears.";
     }
 
     
     public string Quit = "quit";
     public string WaresMenu = "wares menu";
+    public string LoginMenu = "login menu";
     public string PurchaseMenu = "purchase menu";
     public string MainMenu = "main menu";
-    public string MainMenuWhat = "What would you like to do?";
+    public string MenuWhat = "What would you like to do?";
     public string MainMenuWelcome = "Welcome to the WebShop!";
     public string LoginString = "Login";
     public string LogoutString = "Logout";
-    private Tuple<string> _strings;
-
-    public Strings()
-    {
-        
-    }
 }

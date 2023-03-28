@@ -38,6 +38,6 @@ public class WaresMenu : IMenu
         }
         _webShopMenu.AmountOfOptions = 4;
         _webShopMenu.CurrentMenu = _strings.WaresMenu;
-        _strings.MainMenuWhat = "What would you like to do?";
+        _strings.MenuWhat = "What would you like to do?";
     }
 }

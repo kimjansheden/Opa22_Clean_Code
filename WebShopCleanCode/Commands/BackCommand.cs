@@ -9,6 +9,9 @@ public class BackCommand : ICommand
     }
     public void Execute()
     {
-        _webShopMenu.CurrentMenu = _webShopMenu.PreviousMenu;
+        //_webShopMenu.CurrentMenu = _webShopMenu.PreviousMenu;
+        // Back måste vara en hierarki ju där den går upp 1 hela tiden, inte bara går bakåt
+        _webShopMenu.CurrentState = _webShopMenu.PreviousMenuState;
+        _webShopMenu.CurrentChoice = 1;
     }
 }

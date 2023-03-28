@@ -16,7 +16,6 @@ public class MainMenuState : IMenuState
         _webShopMenu = webShopMenu;
         _webShop = webShop;
         _strings = webShopMenu.Strings;
-        SetLoginState();
         _optionActions = new Dictionary<int, Action>
         {
             { 1, ShowWaresMenu },
@@ -29,27 +28,20 @@ public class MainMenuState : IMenuState
             _webShopMenu.Strings.Main.Option2,
             _loginState
         };
-        _webShopMenu.AmountOfOptions = 3;
+        webShopMenu.CurrentChoice = 1;
     }
     private void SetLoginState()
     {
-        _loginState = _webShop.LoginState is LoggedInState ? _strings.LoginString : _strings.LogoutString;
+        _loginState = _webShop.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
+        _options[_options.FindIndex(o => o == null || o == _strings.LogoutString || o == _strings.LoginString)] = _loginState;
     }
 
     private void LoginOrLogout()
     {
         if (_webShop.LoginState is LoggedOutState)
         {
-            _options.Clear();
-            _options.AddRange(new string[] {_strings.Login.Option1, _strings.Login.Option2, _strings.Login.Option3, _strings.Login.Option4});
-            _webShopMenu.AmountOfOptions = 4;
-            _webShopMenu.CurrentChoice = 1;
-            _strings.MainMenuWhat = "Please submit username and password.";
-            _webShopMenu.Username = null;
-            _webShopMenu.Password = null;
-            _webShopMenu.CurrentMenu = "login menu";
-            // Nä denna måste till LoginMenuState och ha fyra nya actions ju: 1. Set username, 2. Set password, 3. Login och 4. Register.
-            _optionActions.Add(4, Register);
+            _webShopMenu.PreviousMenuState = this;
+            _webShopMenu.CurrentState = new LoginMenuState(_webShopMenu, _webShop);
         }
         else if (_webShop.LoginState is LoggedInState)
         {
@@ -64,21 +56,19 @@ public class MainMenuState : IMenuState
         }
     }
 
-    private void Register()
-    {
-        throw new NotImplementedException();
-    }
-
     private void ShowCustomerInfo()
     {
-        throw new NotImplementedException();
+        _webShopMenu.PreviousMenuState = this;
+        _webShopMenu.CurrentState = new CustomerInfoMenuState(_webShopMenu, _webShop);
     }
 
     public void DisplayOptions()
     {
         SetLoginState();
         _webShopMenu.SetOptions(_options);
-        _webShopMenu.CurrentMenu = _webShopMenu.Strings.MainMenu;
+        //_webShopMenu.CurrentMenu = _webShopMenu.Strings.MainMenu;
+        _webShopMenu.AmountOfOptions = 3;
+        Console.WriteLine(_strings.MenuWhat);
         _webShopMenu.PrintOptions();
     }
 
@@ -89,6 +79,7 @@ public class MainMenuState : IMenuState
 
     private void ShowWaresMenu()
     {
+        _webShopMenu.PreviousMenuState = this;
         _webShopMenu.CurrentState = new WaresMenuState(_webShopMenu, _webShop);
     }
 }

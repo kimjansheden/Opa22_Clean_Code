@@ -24,7 +24,7 @@ public class MainMenu : IMenu
     }
     public void Run()
     {
-        Console.WriteLine(_strings.MainMenuWhat);
+        Console.WriteLine(_strings.MenuWhat);
         _webShopMenu.Options[0] = _strings.Main.Option1;
         _webShopMenu.Options[1] = _strings.Main.Option2;
         _webShopMenu.Options[2] = _strings.Main.Option3;

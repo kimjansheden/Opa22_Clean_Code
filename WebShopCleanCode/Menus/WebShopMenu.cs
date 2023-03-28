@@ -17,6 +17,7 @@ public class WebShopMenu : IMenu
     public string Password = null;
     private ICommand _currentCommand = null;
     private string _previousMenu = "";
+    private IMenuState _previousMenuState;
     private string _currentMenu = "";
     private IMenuState _currentState;
     public int CurrentChoice
@@ -79,6 +80,14 @@ public class WebShopMenu : IMenu
         set => _currentState = value;
     }
 
+    public IMenuState PreviousMenuState
+    {
+        get => _previousMenuState;
+        set => _previousMenuState = value;
+    }
+
+    public Dictionary<string, ICommand> Commands => _commands;
+
     /// <summary>
     /// Custom constructor.
     /// </summary>
@@ -136,21 +145,21 @@ public class WebShopMenu : IMenu
     {
         _quitCommand = Strings.Quit;
 
-        _commands.Add("left", new LeftCommand(this));
-        _commands.Add("l", new LeftCommand(this));
+        Commands.Add("left", new LeftCommand(this));
+        Commands.Add("l", new LeftCommand(this));
 
-        _commands.Add("right", new RightCommand(this));
-        _commands.Add("r", new RightCommand(this));
+        Commands.Add("right", new RightCommand(this));
+        Commands.Add("r", new RightCommand(this));
 
-        _commands.Add("ok", new OkCommand(_webShop, this));
-        _commands.Add("o", new OkCommand(_webShop, this));
-        _commands.Add("k", new OkCommand(_webShop, this));
+        Commands.Add("ok", new OkCommand(_webShop, this));
+        Commands.Add("o", new OkCommand(_webShop, this));
+        Commands.Add("k", new OkCommand(_webShop, this));
 
-        _commands.Add("quit", new QuitCommand(this));
-        _commands.Add("q", new QuitCommand(this));
+        Commands.Add("quit", new QuitCommand(this));
+        Commands.Add("q", new QuitCommand(this));
         
-        _commands.Add("back", new BackCommand(this));
-        _commands.Add("b", new BackCommand(this));
+        Commands.Add("back", new BackCommand(this));
+        Commands.Add("b", new BackCommand(this));
     }
 
     /// <summary>
@@ -186,6 +195,7 @@ public class WebShopMenu : IMenu
         PreviousMenu = _currentMenu;
         _currentState = new MainMenuState(this, _webShop);
         _webShop.LoginState = new LoggedOutState(_webShop, this);
+        PreviousMenuState = _currentState;
     }
 
     public void Run()
@@ -238,10 +248,10 @@ public class WebShopMenu : IMenu
 
     private void ExecuteCommandIfExists(string input)
     {
-        if (_commands.ContainsKey(input))
+        if (Commands.ContainsKey(input))
         {
-            _commands[input].Execute();
-            CurrentCommand = _commands[input];
+            Commands[input].Execute();
+            CurrentCommand = Commands[input];
         }
         else
         {

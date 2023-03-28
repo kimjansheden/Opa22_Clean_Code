@@ -5,8 +5,9 @@ public class WaresMenuState : IMenuState
     private readonly WebShopMenu _webShopMenu;
     private readonly WebShop _webShop;
     private Dictionary<int, Action> _optionActions;
-    private string _loginMessage;
+    private string _loginState;
     private Strings _strings;
+    private List<string> _options;
     public WaresMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
@@ -19,54 +20,53 @@ public class WaresMenuState : IMenuState
             { 3, SortWares },
             {4, LoginOrLogout}
         };
-        SetLoginMessage();
+        _options = new List<string>
+        {
+            _webShopMenu.Strings.Wares.Option1,
+            _webShopMenu.Strings.Wares.Option2,
+            _webShopMenu.Strings.Wares.Option3,
+            _loginState
+        };
+        webShopMenu.CurrentChoice = 1;
     }
 
     private void LoginOrLogout()
     {
         if (_webShop.LoginState is LoggedInState)
         {
-            _webShopMenu.Options[3] = "Login";
+            _options[3] = _strings.LoginString;
             Console.WriteLine();
             Console.WriteLine(_webShop.currentCustomer.Username + " logged out.");
             Console.WriteLine();
             _webShop.currentCustomer = null;
+            _webShop.LoginState = new LoggedOutState(_webShop, _webShopMenu);
             _webShopMenu.CurrentChoice = 1;
         }
         else if (_webShop.LoginState is LoggedOutState)
         {
             {
-                _webShopMenu.Options[0] = "Set Username";
-                _webShopMenu.Options[1] = "Set Password";
-                _webShopMenu.Options[2] = "Login";
-                _webShopMenu.Options[3] = "Register";
-                _webShopMenu.AmountOfOptions = 4;
-                _strings.MainMenuWhat = "Please submit username and password.";
-                _webShopMenu.CurrentChoice = 1;
-                _webShopMenu.CurrentMenu = "login menu";
+                _webShopMenu.PreviousMenuState = this;
+                _webShopMenu.CurrentState = new LoginMenuState(_webShopMenu, _webShop);
             }
         }
     }
 
-    private void SetLoginMessage()
+    // Den här skulle kunna vara gemensam. Kanske ändra om IMenuState till abstract så alla kan dela på den?
+    private void SetLoginState()
     {
-        _loginMessage = _webShop.LoginState is LoggedInState ? _strings.LoginString : _strings.LogoutString;
+        _loginState = _webShop.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
+        _options[_options.FindIndex(o => o == null || o == _strings.LogoutString || o == _strings.LoginString)] = _loginState;
     }
 
     private void SortWares()
     {
-        _webShopMenu.Options[0] = "Sort by name, descending";
-        _webShopMenu.Options[1] = "Sort by name, ascending";
-        _webShopMenu.Options[2] = "Sort by price, descending";
-        _webShopMenu.Options[3] = "Sort by price, ascending";
-        _strings.MainMenuWhat = "How would you like to sort them?";
-        _webShopMenu.CurrentMenu = "sort menu";
-        _webShopMenu.CurrentChoice = 1;
-        _webShopMenu.AmountOfOptions = 4;
+        _webShopMenu.PreviousMenuState = this;
+        _webShopMenu.CurrentState = new SortMenuState(_webShopMenu, _webShop);
     }
 
     private void ShowPurchaseWaresMenu()
     {
+        _webShopMenu.PreviousMenuState = this;
         _webShopMenu.CurrentState = new PurchaseMenuState(_webShopMenu, _webShop);
     }
 
@@ -82,18 +82,12 @@ public class WaresMenuState : IMenuState
 
     public void DisplayOptions()
     {
-        SetLoginMessage();
-        _webShopMenu.SetOptions(new List<string>
-        {
-            _webShopMenu.Strings.Wares.Option1,
-            _webShopMenu.Strings.Wares.Option2,
-            _webShopMenu.Strings.Wares.Option3,
-            _loginMessage
-        });
+        SetLoginState();
+        _webShopMenu.SetOptions(_options);
         _webShopMenu.AmountOfOptions = 4;
-        _webShopMenu.CurrentMenu = _strings.WaresMenu;
+        //_webShopMenu.CurrentMenu = _strings.WaresMenu;
+        Console.WriteLine(_strings.MenuWhat);
         _webShopMenu.PrintOptions();
-        //_strings.MainMenuWhat = "What would you like to do?";
     }
 
     public void ExecuteOption(int option)
