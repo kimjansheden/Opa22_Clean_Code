@@ -1,6 +1,6 @@
 namespace WebShopCleanCode.Interfaces;
 
-public interface ILoginState
+public interface ILoginState : IState
 {
     void RequestHandle();
 }

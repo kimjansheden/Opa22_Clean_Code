@@ -8,19 +8,46 @@ internal class PurchaseMenuState : IMenuState
     private readonly WebShop _webShop;
     private Dictionary<int, Action> _optionActions;
     private string _loginMessage;
-    private Strings _strings;
     private int _amountOfOptions;
-    public int AmountOfOptions
+
+    private int AmountOfOptions
     {
         get => _webShopMenu.AmountOfOptions;
         set => _webShopMenu.AmountOfOptions = value;
+    }
+
+    private IMenuState CurrentState
+    {
+        get => _webShopMenu.CurrentState;
+        set => _webShopMenu.CurrentState = value;
+    }
+
+    private IMenuState PreviousState
+    {
+        get => _webShopMenu.PreviousMenuState;
+        set => _webShopMenu.PreviousMenuState = value;
+    }
+
+    private Dictionary<StatesEnum, IMenuState> States
+    {
+        get => _webShopMenu.States;
+        set => _webShopMenu.States = value;
+    }
+
+    private int CurrentChoice
+    {
+        get => _webShopMenu.CurrentChoice;
+        set => _webShopMenu.CurrentChoice = value;
+    }
+    private List<IState> StateHistory
+    {
+        get => _webShopMenu.StateHistory;
+        set => _webShopMenu.StateHistory = value;
     }
     public PurchaseMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
         _webShop = webShop;
-        _strings = webShopMenu.Strings;
-        _webShopMenu.CurrentChoice = 1;
     }
 
     public void DisplayOptions()
@@ -32,12 +59,11 @@ internal class PurchaseMenuState : IMenuState
         }
         Console.WriteLine("Your funds: " + _webShop.currentCustomer.Funds);
         _webShopMenu.ClearAllOptions();
-        _webShopMenu.CurrentMenu = _strings.PurchaseMenu;
     }
 
     public void ExecuteOption(int option)
     {
-        int index = _webShopMenu.CurrentChoice - 1;
+        int index = CurrentChoice - 1;
         Product product = _webShop.products[index];
         if (product.InStock())
         {
@@ -63,5 +89,13 @@ internal class PurchaseMenuState : IMenuState
             Console.WriteLine("Not in stock.");
             Console.WriteLine();
         }
+    }
+
+    public void ChangeState(StatesEnum stateEnum)
+    {
+        PreviousState = this;
+        CurrentState = States[stateEnum];
+        CurrentChoice = 1;
+        StateHistory.Add(this);
     }
 }

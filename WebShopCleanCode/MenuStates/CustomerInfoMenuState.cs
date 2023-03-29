@@ -28,6 +28,34 @@ public class CustomerInfoMenuState : IMenuState
         webShopMenu.CurrentChoice = 1;
     }
 
+    private IMenuState CurrentState
+    {
+        get => _webShopMenu.CurrentState;
+        set => _webShopMenu.CurrentState = value;
+    }
+
+    private IMenuState PreviousState
+    {
+        get => _webShopMenu.PreviousMenuState;
+        set => _webShopMenu.PreviousMenuState = value;
+    }
+
+    private Dictionary<StatesEnum, IMenuState> States
+    {
+        get => _webShopMenu.States;
+        set => _webShopMenu.States = value;
+    }
+
+    private int CurrentChoice
+    {
+        get => _webShopMenu.CurrentChoice;
+        set => _webShopMenu.CurrentChoice = value;
+    }
+    private List<IState> StateHistory
+    {
+        get => _webShopMenu.StateHistory;
+        set => _webShopMenu.StateHistory = value;
+    }
     private void AddFunds()
     {
         Console.WriteLine("How many funds would you like to add?");
@@ -87,5 +115,13 @@ public class CustomerInfoMenuState : IMenuState
     public void ExecuteOption(int option)
     {
         _optionActions[option]();
+    }
+
+    public void ChangeState(StatesEnum stateEnum)
+    {
+        PreviousState = this;
+        CurrentState = States[stateEnum];
+        CurrentChoice = 1;
+        StateHistory.Add(this);
     }
 }

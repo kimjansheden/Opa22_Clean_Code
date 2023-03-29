@@ -33,16 +33,45 @@ public class LoginMenuState : IMenuState
         webShopMenu.CurrentChoice = 1;
     }
 
+    private IMenuState CurrentState
+    {
+        get => _webShopMenu.CurrentState;
+        set => _webShopMenu.CurrentState = value;
+    }
+
+    private IMenuState PreviousState
+    {
+        get => _webShopMenu.PreviousMenuState;
+        set => _webShopMenu.PreviousMenuState = value;
+    }
+
+    private Dictionary<StatesEnum, IMenuState> States
+    {
+        get => _webShopMenu.States;
+        set => _webShopMenu.States = value;
+    }
+
+    private int CurrentChoice
+    {
+        get => _webShopMenu.CurrentChoice;
+        set => _webShopMenu.CurrentChoice = value;
+    }
+    private List<IState> StateHistory
+    {
+        get => _webShopMenu.StateHistory;
+        set => _webShopMenu.StateHistory = value;
+    }
+
     private void Register()
     {
-        Console.WriteLine("Please write your username.");
+        Console.WriteLine(_strings.Login.WriteUsername);
         string newUsername = Console.ReadLine();
         foreach (Customer customer in _webShop.customers)
         {
             if (customer.Username.Equals(_webShopMenu.Username))
             {
                 Console.WriteLine();
-                Console.WriteLine("Username already exists.");
+                Console.WriteLine(_strings.Login.UsernameExists);
                 Console.WriteLine();
                 break;
             }
@@ -289,8 +318,7 @@ public class LoginMenuState : IMenuState
         Console.WriteLine();
         Console.WriteLine(newCustomer.Username + " successfully added and is now logged in.");
         Console.WriteLine();
-        _webShopMenu.PreviousMenuState = this;
-        _webShopMenu.CurrentState = new MainMenuState(_webShopMenu, _webShop);
+        ChangeState(StatesEnum.MainMenu);
     }
 
     private void Login()
@@ -313,8 +341,7 @@ public class LoginMenuState : IMenuState
                     Console.WriteLine();
                     _webShop.currentCustomer = customer;
                     found = true;
-                    _webShopMenu.PreviousMenuState = this;
-                    _webShopMenu.CurrentState = new MainMenuState(_webShopMenu, _webShop);
+                    ChangeState(StatesEnum.MainMenu);
                     break;
                 }
             }
@@ -347,7 +374,6 @@ public class LoginMenuState : IMenuState
     {
         _webShopMenu.SetOptions(_options);
         _webShopMenu.AmountOfOptions = 4;
-        _webShopMenu.CurrentMenu = _strings.LoginMenu;
         Console.WriteLine(_strings.Login.Menu);
         _webShopMenu.PrintOptions();
     }
@@ -355,5 +381,13 @@ public class LoginMenuState : IMenuState
     public void ExecuteOption(int option)
     {
         _optionActions[option]();
+    }
+
+    public void ChangeState(StatesEnum stateEnum)
+    {
+        PreviousState = this;
+        CurrentState = States[stateEnum];
+        CurrentChoice = 1;
+        StateHistory.Add(this);
     }
 }

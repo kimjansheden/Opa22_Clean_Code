@@ -1,5 +1,6 @@
 using WebShopCleanCode.Interfaces;
-namespace WebShopCleanCode;
+
+namespace WebShopCleanCode.Commands;
 public class BackCommand : ICommand
 {
     private readonly WebShopMenu _webShopMenu;
@@ -7,11 +8,17 @@ public class BackCommand : ICommand
     {
         _webShopMenu = webShopMenu;
     }
+
+    private IState LastState => (_webShopMenu.StateHistory.Count != 0 ? _webShopMenu.StateHistory[^1] : default)!;
+
     public void Execute()
     {
-        //_webShopMenu.CurrentMenu = _webShopMenu.PreviousMenu;
-        // Back måste vara en hierarki ju där den går upp 1 hela tiden, inte bara går bakåt
-        _webShopMenu.CurrentState = _webShopMenu.PreviousMenuState;
-        _webShopMenu.CurrentChoice = 1;
+        
+        if (LastState is IMenuState menuState)
+        {
+            _webShopMenu.CurrentState = menuState;
+            _webShopMenu.StateHistory.Remove(LastState);
+            _webShopMenu.CurrentChoice = 1;
+        }
     }
 }

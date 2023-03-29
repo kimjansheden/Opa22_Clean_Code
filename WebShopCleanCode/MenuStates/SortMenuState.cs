@@ -29,21 +29,41 @@ public class SortMenuState : IMenuState
             _webShopMenu.Strings.Sort.Option3,
             _webShopMenu.Strings.Sort.Option4
         };
-        webShopMenu.CurrentChoice = 1;
+        CurrentChoice = 1;
     }
 
+    private IMenuState CurrentState
+    {
+        get => _webShopMenu.CurrentState;
+        set => _webShopMenu.CurrentState = value;
+    }
+
+    private IMenuState PreviousState
+    {
+        get => _webShopMenu.PreviousMenuState;
+        set => _webShopMenu.PreviousMenuState = value;
+    }
+
+    private Dictionary<StatesEnum, IMenuState> States
+    {
+        get => _webShopMenu.States;
+        set => _webShopMenu.States = value;
+    }
+
+    private int CurrentChoice
+    {
+        get => _webShopMenu.CurrentChoice;
+        set => _webShopMenu.CurrentChoice = value;
+    }
+    private List<IState> StateHistory
+    {
+        get => _webShopMenu.StateHistory;
+        set => _webShopMenu.StateHistory = value;
+    }
     private void PriceAscending()
     {
         _webShop.bubbleSort("price", true);
         PrintOkGoBack();
-    }
-
-    private void PrintOkGoBack()
-    {
-        Console.WriteLine();
-        Console.WriteLine("Wares sorted.");
-        Console.WriteLine();
-        _webShopMenu.Commands["back"].Execute();
     }
 
     private void PriceDescending()
@@ -75,5 +95,20 @@ public class SortMenuState : IMenuState
     public void ExecuteOption(int option)
     {
         _optionActions[option]();
+    }
+
+    public void ChangeState(StatesEnum stateEnum)
+    {
+        PreviousState = this;
+        CurrentState = States[stateEnum];
+        CurrentChoice = 1;
+        StateHistory.Add(this);
+    }
+    private void PrintOkGoBack()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Wares sorted.");
+        Console.WriteLine();
+        _webShopMenu.Commands["back"].Execute();
     }
 }

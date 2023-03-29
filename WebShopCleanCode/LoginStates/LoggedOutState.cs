@@ -18,6 +18,5 @@ public class LoggedOutState : ILoginState
         Console.WriteLine();
         Console.WriteLine("You must be logged in to purchase wares.");
         Console.WriteLine();
-        // _webShopMenu.CurrentChoice = 1;
     }
 }

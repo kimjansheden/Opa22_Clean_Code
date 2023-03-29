@@ -17,10 +17,7 @@ public class LoggedInState : ILoginState
 
     public void RequestHandle()
     {
-        _webShopMenu.CurrentMenu = "purchase menu";
         Console.WriteLine("What would you like to purchase?");
-        //_strings.MainMenuWhat = "What would you like to purchase?";
-        //_webShopMenu.CurrentChoice = 1;
         _webShopMenu.AmountOfOptions = _webShop.products.Count;
     }
 }

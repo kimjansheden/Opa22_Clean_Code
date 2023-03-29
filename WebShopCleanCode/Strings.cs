@@ -47,15 +47,13 @@ public class Strings
         public string Option3  = "Login";
         public string Option4  = "Register";
         public string Menu = "Please submit username and password.";
+        public string WriteUsername = "Please write your username.";
+        public string UsernameExists = "Username already exists.";
         public string AKeyBoard = "A keyboard appears.";
     }
 
     
     public string Quit = "quit";
-    public string WaresMenu = "wares menu";
-    public string LoginMenu = "login menu";
-    public string PurchaseMenu = "purchase menu";
-    public string MainMenu = "main menu";
     public string MenuWhat = "What would you like to do?";
     public string MainMenuWelcome = "Welcome to the WebShop!";
     public string LoginString = "Login";

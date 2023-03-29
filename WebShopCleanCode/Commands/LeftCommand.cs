@@ -1,5 +1,6 @@
 using WebShopCleanCode.Interfaces;
-namespace WebShopCleanCode;
+
+namespace WebShopCleanCode.Commands;
 public class LeftCommand : ICommand
 {
     private readonly WebShopMenu _webShopMenu;
