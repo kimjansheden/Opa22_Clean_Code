@@ -3,6 +3,6 @@ namespace WebShopCleanCode.Interfaces;
 public interface ILoginState : IState
 {
     void RequestHandle();
-    void LoginOutHandle();
+    void LoginLogoutHandle();
     void ChangeState(StatesEnum stateEnum);
 }

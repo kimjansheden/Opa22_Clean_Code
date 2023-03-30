@@ -1,20 +1,13 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.Interfaces;
 using WebShopCleanCode.LoginStates;
 
 namespace WebShopCleanCode.MenuStates;
-public class CustomerInfoMenuState : IMenuState
+public class CustomerInfoMenuState : MenuState
 {
-    private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _defaultWebShop;
-    private Dictionary<int, Action> _optionActions;
-    private string _loginState;
-    private Strings _strings;
-    private List<string> _options;
-    public CustomerInfoMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
+    public CustomerInfoMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
-        _defaultWebShop = defaultWebShop;
+        _webShop = webShop;
         _strings = webShopMenu.Strings;
         _optionActions = new Dictionary<int, Action>
         {
@@ -29,35 +22,6 @@ public class CustomerInfoMenuState : IMenuState
             _webShopMenu.Strings.Customer.Option3,
         };
         webShopMenu.CurrentChoice = 1;
-    }
-
-    private IState CurrentState
-    {
-        get => _webShopMenu.CurrentState;
-        set => _webShopMenu.CurrentState = value;
-    }
-
-    private IState PreviousState
-    {
-        get => _webShopMenu.PreviousState;
-        set => _webShopMenu.PreviousState = value;
-    }
-
-    private Dictionary<StatesEnum, IMenuState> States
-    {
-        get => _webShopMenu.States;
-        set => _webShopMenu.States = value;
-    }
-
-    private int CurrentChoice
-    {
-        get => _webShopMenu.CurrentChoice;
-        set => _webShopMenu.CurrentChoice = value;
-    }
-    private List<IState> StateHistory
-    {
-        get => _webShopMenu.StateHistory;
-        set => _webShopMenu.StateHistory = value;
     }
     private void AddFunds()
     {
@@ -74,7 +38,7 @@ public class CustomerInfoMenuState : IMenuState
             }
             else
             {
-                _defaultWebShop.CurrentCustomer.Funds += amount;
+                _webShop.CurrentCustomer.Funds += amount;
                 Console.WriteLine();
                 Console.WriteLine(amount + " added to your profile.");
                 Console.WriteLine();
@@ -90,21 +54,19 @@ public class CustomerInfoMenuState : IMenuState
 
     private void SeeInfo()
     {
-        _defaultWebShop.CurrentCustomer.PrintInfo();
+        _webShop.CurrentCustomer.PrintInfo();
     }
 
     private void SeeOrders()
     {
-        _defaultWebShop.CurrentCustomer.PrintOrders();
+        _webShop.CurrentCustomer.PrintOrders();
     }
 
-    public void DisplayOptions()
+    protected internal override void DisplayOptions()
     {
         if (_webShopMenu.LoginState is LoggedOutState)
         {
-            Console.WriteLine();
-            Console.WriteLine("Nobody is logged in.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.NobodyLoggedIn);
         }
         else if (_webShopMenu.LoginState is LoggedInState)
         {
@@ -113,18 +75,5 @@ public class CustomerInfoMenuState : IMenuState
             Console.WriteLine(_strings.MenuWhat);
             _webShopMenu.PrintOptions();
         }
-    }
-
-    public void ExecuteOption(int option)
-    {
-        _optionActions[option]();
-    }
-
-    public void ChangeState(StatesEnum stateEnum)
-    {
-        PreviousState = this;
-        CurrentState = States[stateEnum];
-        CurrentChoice = 1;
-        StateHistory.Add(this);
     }
 }

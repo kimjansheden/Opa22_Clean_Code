@@ -1,3 +1,4 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.Commands;
@@ -14,7 +15,7 @@ public class BackCommand : ICommand
     public void Execute()
     {
         
-        if (LastState is IMenuState menuState)
+        if (LastState is MenuState menuState)
         {
             _webShopMenu.CurrentState = menuState;
             _webShopMenu.StateHistory.Remove(LastState);

@@ -3,88 +3,51 @@ using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.MenuStates;
 
-public class PurchaseMenuState : IMenuState
+public class PurchaseMenuState : MenuState
 {
-    private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _defaultWebShop;
-    private Dictionary<int, Action> _optionActions;
-    private string _loginMessage;
-    private int _amountOfOptions;
-
-    private IState CurrentState
-    {
-        get => _webShopMenu.CurrentState;
-        set => _webShopMenu.CurrentState = value;
-    }
-
-    private IState PreviousState
-    {
-        get => _webShopMenu.PreviousState;
-        set => _webShopMenu.PreviousState = value;
-    }
-
-    private Dictionary<StatesEnum, IMenuState> States
-    {
-        get => _webShopMenu.States;
-        set => _webShopMenu.States = value;
-    }
-
-    private int CurrentChoice
-    {
-        get => _webShopMenu.CurrentChoice;
-        set => _webShopMenu.CurrentChoice = value;
-    }
-    private List<IState> StateHistory
-    {
-        get => _webShopMenu.StateHistory;
-        set => _webShopMenu.StateHistory = value;
-    }
-    public PurchaseMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
+    public PurchaseMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
-        _defaultWebShop = defaultWebShop;
+        _webShop = webShop;
+        _strings = webShopMenu.Strings;
     }
 
-    public void DisplayOptions()
+    protected internal override void DisplayOptions()
     {
         ((ILoginState)_webShopMenu.LoginState).RequestHandle();
     }
 
-    public void ExecuteOption(int option)
+    protected internal override void ExecuteOption(int option)
     {
         int index = CurrentChoice - 1;
-        Product product = _defaultWebShop.Products[index];
+        Product product = _webShop.Products[index];
         if (product.InStock())
         {
-            if (_defaultWebShop.CurrentCustomer.CanAfford(product.Price))
-            {
-                _defaultWebShop.CurrentCustomer.Funds -= product.Price;
-                product.NrInStock--;
-                _defaultWebShop.CurrentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
-                Console.WriteLine();
-                Console.WriteLine("Successfully bought " + product.Name);
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("You cannot afford.");
-                Console.WriteLine();
-            }
+            AttemptPurchase(product);
         }
         else
         {
-            Console.WriteLine();
-            Console.WriteLine("Not in stock.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Purchase.NotInStock);
         }
     }
 
-    public void ChangeState(StatesEnum stateEnum)
+    private void AttemptPurchase(Product product)
     {
-        PreviousState = this;
-        CurrentState = States[stateEnum];
-        CurrentChoice = 1;
-        StateHistory.Add(this);
+        if (_webShop.CurrentCustomer.CanAfford(product.Price))
+        {
+            CompletePurchase(product);
+        }
+        else
+        {
+            PrintMessageWithPadding(_strings.Purchase.CannotAfford);
+        }
+    }
+
+    private void CompletePurchase(Product product)
+    {
+        _webShop.CurrentCustomer.Funds -= product.Price;
+        product.NrInStock--;
+        _webShop.CurrentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
+        PrintMessageWithPadding(_strings.Purchase.Success + product.Name);
     }
 }

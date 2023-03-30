@@ -9,7 +9,7 @@ namespace WebShopCleanCode;
 public class WebShopMenu : IMenu
 {
     private readonly Dictionary<string, ICommand> _commands;
-    private Dictionary<StatesEnum, IMenuState> _menuStates;
+    private Dictionary<StatesEnum, MenuState> _menuStates;
     private Dictionary<StatesEnum, ILoginState> _loginStates;
     
     private List<string> _options;
@@ -75,7 +75,7 @@ public class WebShopMenu : IMenu
 
     public Dictionary<string, ICommand> Commands => _commands;
 
-    public Dictionary<StatesEnum, IMenuState> States
+    public Dictionary<StatesEnum, MenuState> States
     {
         get => _menuStates;
         set => _menuStates = value;
@@ -109,7 +109,7 @@ public class WebShopMenu : IMenu
     /// <param name="startLoginState"></param>
     /// <param name="menuStates"></param>
     /// <param name="loginStates"></param>
-    public WebShopMenu(WebShop webShop, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, IMenuState startMenuState, ILoginState startLoginState, Dictionary<StatesEnum, IMenuState> menuStates, Dictionary<StatesEnum, ILoginState> loginStates)
+    public WebShopMenu(WebShop webShop, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startMenuState, ILoginState startLoginState, Dictionary<StatesEnum, MenuState> menuStates, Dictionary<StatesEnum, ILoginState> loginStates)
     {
         _webShop = webShop;
         _commands = commands;
@@ -144,7 +144,7 @@ public class WebShopMenu : IMenu
         _loginStates.Add(StatesEnum.LoggedIn, new LoggedInState(_webShop, this));
         _loginStates.Add(StatesEnum.LoggedOut, new LoggedOutState(this));
         
-        _menuStates = new Dictionary<StatesEnum, IMenuState>();
+        _menuStates = new Dictionary<StatesEnum, MenuState>();
         _menuStates.Add(StatesEnum.CustomerMenu, new CustomerInfoMenuState(this, _webShop));
         _menuStates.Add(StatesEnum.LoginMenu, new LoginMenuState(this, _webShop));
         _menuStates.Add(StatesEnum.MainMenu, new MainMenuState(this, _webShop));
@@ -238,7 +238,7 @@ public class WebShopMenu : IMenu
 
     public void DisplayOptions()
     {
-        if (CurrentState is IMenuState menuState)
+        if (CurrentState is MenuState menuState)
         {
             menuState.DisplayOptions();
         }

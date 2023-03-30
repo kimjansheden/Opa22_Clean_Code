@@ -20,7 +20,7 @@ public class LoggedInState : ILoginState
         set => _webShopMenu.CurrentState = value;
     }
 
-    private Dictionary<StatesEnum, IMenuState> States
+    private Dictionary<StatesEnum, MenuState> States
     {
         get => _webShopMenu.States;
         set => _webShopMenu.States = value;
@@ -41,6 +41,12 @@ public class LoggedInState : ILoginState
 
     public void RequestHandle()
     {
+        DisplayProductsAndFunds();
+        _webShopMenu.ClearAllOptions();
+    }
+
+    private void DisplayProductsAndFunds()
+    {
         Console.WriteLine(_strings.Purchase.WhatPurchase);
         AmountOfOptions = _webShop.Products.Count;
         for (int i = 0; i < AmountOfOptions; i++)
@@ -48,10 +54,9 @@ public class LoggedInState : ILoginState
             Console.WriteLine(i + 1 + ": " + _webShop.Products[i].Name + ", " + _webShop.Products[i].Price + "kr");
         }
         Console.WriteLine("Your funds: " + _webShop.CurrentCustomer.Funds);
-        _webShopMenu.ClearAllOptions();
     }
 
-    public void LoginOutHandle()
+    public void LoginLogoutHandle()
     {
         Console.WriteLine();
         Console.WriteLine(_webShop.CurrentCustomer.Username + " logged out.");
@@ -62,8 +67,6 @@ public class LoggedInState : ILoginState
 
     public void ChangeState(StatesEnum stateEnum)
     {
-        // PreviousState = this;
-        // StateHistory.Add(this);
         CurrentState = States[stateEnum];
         CurrentChoice = 1;
     }

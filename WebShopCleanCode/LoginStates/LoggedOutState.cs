@@ -1,5 +1,8 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
+
 namespace WebShopCleanCode.LoginStates;
+
 public class LoggedOutState : ILoginState
 {
     private readonly Strings _strings;
@@ -9,7 +12,7 @@ public class LoggedOutState : ILoginState
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
-    private Dictionary<StatesEnum, IMenuState> States
+    private Dictionary<StatesEnum, MenuState> States
     {
         get => _webShopMenu.States;
         set => _webShopMenu.States = value;
@@ -33,7 +36,7 @@ public class LoggedOutState : ILoginState
         _webShopMenu.DisplayOptions();
     }
 
-    public void LoginOutHandle()
+    public void LoginLogoutHandle()
     {
         ChangeState(StatesEnum.LoginMenu);
     }

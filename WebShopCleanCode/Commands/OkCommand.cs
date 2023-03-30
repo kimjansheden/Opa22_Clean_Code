@@ -1,3 +1,4 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.Commands;
@@ -11,9 +12,6 @@ public class OkCommand : ICommand
     }
     public void Execute()
     {
-        if (_webShopMenu.CurrentState is IMenuState menuState)
-        {
-            menuState.ExecuteOption(_webShopMenu.CurrentChoice);
-        }
+        ((MenuState)_webShopMenu.CurrentState).ExecuteOption(_webShopMenu.CurrentChoice);
     }
 }

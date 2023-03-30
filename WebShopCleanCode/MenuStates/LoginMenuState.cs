@@ -1,22 +1,14 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.Interfaces;
 using WebShopCleanCode.LoginStates;
 
 namespace WebShopCleanCode.MenuStates;
 
-public class LoginMenuState : IMenuState
+public class LoginMenuState : MenuState
 {
-    private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _defaultWebShop;
-    private Dictionary<int, Action> _optionActions;
-    private string _loginState;
-    private Strings _strings;
-    private List<string> _options;
-
-    public LoginMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
+    public LoginMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
-        _defaultWebShop = defaultWebShop;
+        _webShop = webShop;
         _strings = webShopMenu.Strings;
         _optionActions = new Dictionary<int, Action>
         {
@@ -34,47 +26,15 @@ public class LoginMenuState : IMenuState
         };
         webShopMenu.CurrentChoice = 1;
     }
-
-    private IState CurrentState
-    {
-        get => _webShopMenu.CurrentState;
-        set => _webShopMenu.CurrentState = value;
-    }
-
-    private IState PreviousState
-    {
-        get => _webShopMenu.PreviousState;
-        set => _webShopMenu.PreviousState = value;
-    }
-
-    private Dictionary<StatesEnum, IMenuState> States
-    {
-        get => _webShopMenu.States;
-        set => _webShopMenu.States = value;
-    }
-
-    private int CurrentChoice
-    {
-        get => _webShopMenu.CurrentChoice;
-        set => _webShopMenu.CurrentChoice = value;
-    }
-    private List<IState> StateHistory
-    {
-        get => _webShopMenu.StateHistory;
-        set => _webShopMenu.StateHistory = value;
-    }
-
     private void Register()
     {
         Console.WriteLine(_strings.Login.WriteUsername);
         string newUsername = Console.ReadLine();
-        foreach (Customer customer in _defaultWebShop.Customers)
+        foreach (Customer customer in _webShop.Customers)
         {
             if (customer.Username.Equals(_webShopMenu.Username))
             {
-                Console.WriteLine();
-                Console.WriteLine(_strings.Login.UsernameExists);
-                Console.WriteLine();
+                PrintMessageWithPadding(_strings.Login.UsernameExists);
                 break;
             }
         }
@@ -99,9 +59,7 @@ public class LoginMenuState : IMenuState
                     newPassword = Console.ReadLine();
                     if (newPassword.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -115,25 +73,21 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want a first name? y/n");
+            Console.WriteLine(_strings.Login.WantFirstName);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your first name.");
+                    Console.WriteLine(_strings.Login.WriteFirstName);
                     firstName = Console.ReadLine();
                     if (firstName.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -147,25 +101,21 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want a last name? y/n");
+            Console.WriteLine(_strings.Login.WantLastName);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your last name.");
+                    Console.WriteLine(_strings.Login.WriteLastName);
                     lastName = Console.ReadLine();
                     if (lastName.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -179,25 +129,21 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want an email? y/n");
+            Console.WriteLine(_strings.Login.WantEmail);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your email.");
+                    Console.WriteLine(_strings.Login.WriteEmail);
                     email = Console.ReadLine();
                     if (email.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -211,19 +157,17 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want an age? y/n");
+            Console.WriteLine(_strings.Login.WantAge);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your age.");
+                    Console.WriteLine(_strings.Login.WriteAge);
                     string ageString = Console.ReadLine();
                     try
                     {
@@ -231,9 +175,7 @@ public class LoginMenuState : IMenuState
                     }
                     catch (FormatException e)
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please write a number.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteNumber);
                         continue;
                     }
                     next = true;
@@ -245,25 +187,21 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want an address? y/n");
+            Console.WriteLine(_strings.Login.WantAddress);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your address.");
+                    Console.WriteLine(_strings.Login.WriteAddress);
                     address = Console.ReadLine();
                     if (address.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -277,25 +215,21 @@ public class LoginMenuState : IMenuState
                 next = false;
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
         while (true)
         {
-            Console.WriteLine("Do you want a phone number? y/n");
+            Console.WriteLine(_strings.Login.WantPhone);
             choice = Console.ReadLine();
             if (choice.Equals("y"))
             {
                 while (true)
                 {
-                    Console.WriteLine("Please write your phone number.");
+                    Console.WriteLine(_strings.Login.WritePhone);
                     phoneNumber = Console.ReadLine();
                     if (phoneNumber.Equals(""))
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Please actually write something.");
-                        Console.WriteLine();
+                        PrintMessageWithPadding(_strings.Login.WriteSomething);
                     }
                     else
                     {
@@ -308,18 +242,14 @@ public class LoginMenuState : IMenuState
             {
                 break;
             }
-            Console.WriteLine();
-            Console.WriteLine("y or n, please.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.YOrN);
         }
     
         Customer newCustomer = new Customer(newUsername, newPassword, firstName, lastName, email, age, address, phoneNumber);
-        _defaultWebShop.Customers.Add(newCustomer);
-        _defaultWebShop.CurrentCustomer = newCustomer;
-        _webShopMenu.LoginState = new LoggedInState(_defaultWebShop, _webShopMenu);
-        Console.WriteLine();
-        Console.WriteLine(newCustomer.Username + " successfully added and is now logged in.");
-        Console.WriteLine();
+        _webShop.Customers.Add(newCustomer);
+        _webShop.CurrentCustomer = newCustomer;
+        _webShopMenu.LoginState = new LoggedInState(_webShop, _webShopMenu);
+        PrintMessageWithPadding(newCustomer.Username + " successfully added and is now logged in.");
         ChangeState(StatesEnum.MainMenu);
     }
 
@@ -327,21 +257,17 @@ public class LoginMenuState : IMenuState
     {
         if (_webShopMenu.Username == null || _webShopMenu.Password == null)
         {
-            Console.WriteLine();
-            Console.WriteLine("Incomplete data.");
-            Console.WriteLine();
+            PrintMessageWithPadding(_strings.Login.IncompleteData);
         }
         else
         {
             bool found = false;
-            foreach (Customer customer in _defaultWebShop.Customers)
+            foreach (Customer customer in _webShop.Customers)
             {
                 if (_webShopMenu.Username.Equals(customer.Username) && customer.CheckPassword(_webShopMenu.Password))
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(customer.Username + " logged in.");
-                    Console.WriteLine();
-                    _defaultWebShop.CurrentCustomer = customer;
+                    PrintMessageWithPadding(customer.Username + " logged in.");
+                    _webShop.CurrentCustomer = customer;
                     found = true;
                     ChangeState(StatesEnum.MainMenu);
                     break;
@@ -349,9 +275,7 @@ public class LoginMenuState : IMenuState
             }
             if (found == false)
             {
-                Console.WriteLine();
-                Console.WriteLine("Invalid credentials.");
-                Console.WriteLine();
+                PrintMessageWithPadding(_strings.Login.InvalidCreds);
             }
         }
     }
@@ -359,7 +283,7 @@ public class LoginMenuState : IMenuState
     private void SetPassword()
     {
         Console.WriteLine(_strings.Login.AKeyBoard);
-        Console.WriteLine("Please input your password.");
+        Console.WriteLine(_strings.Login.InputPassword);
         _webShopMenu.Password = Console.ReadLine();
         Console.WriteLine();
     }
@@ -367,29 +291,16 @@ public class LoginMenuState : IMenuState
     private void SetUsername()
     {
         Console.WriteLine(_strings.Login.AKeyBoard);
-        Console.WriteLine("Please input your username.");
+        Console.WriteLine(_strings.Login.InputUsername);
         _webShopMenu.Username = Console.ReadLine();
         Console.WriteLine();
     }
 
-    public void DisplayOptions()
+    protected internal override void DisplayOptions()
     {
         _webShopMenu.SetOptions(_options);
         _webShopMenu.AmountOfOptions = 4;
         Console.WriteLine(_strings.Login.Menu);
         _webShopMenu.PrintOptions();
-    }
-
-    public void ExecuteOption(int option)
-    {
-        _optionActions[option]();
-    }
-
-    public void ChangeState(StatesEnum stateEnum)
-    {
-        PreviousState = this;
-        CurrentState = States[stateEnum];
-        CurrentChoice = 1;
-        StateHistory.Add(this);
     }
 }

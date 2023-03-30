@@ -1,6 +1,4 @@
-﻿using WebShopCleanCode.Interfaces;
-
-namespace WebShopCleanCode
+﻿namespace WebShopCleanCode
 {
     public class Program
     {

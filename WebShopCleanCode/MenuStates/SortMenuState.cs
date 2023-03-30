@@ -1,16 +1,9 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.MenuStates;
 
-public class SortMenuState : IMenuState
+public class SortMenuState : MenuState
 {
-    private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _webShop;
-    private Dictionary<int, Action> _optionActions;
-    private string _loginState;
-    private Strings _strings;
-    private List<string> _options;
     public SortMenuState(WebShopMenu webShopMenu, WebShop webShop)
     {
         _webShopMenu = webShopMenu;
@@ -31,35 +24,6 @@ public class SortMenuState : IMenuState
             _webShopMenu.Strings.Sort.Option4
         };
         CurrentChoice = 1;
-    }
-
-    private IState CurrentState
-    {
-        get => _webShopMenu.CurrentState;
-        set => _webShopMenu.CurrentState = value;
-    }
-
-    private IState PreviousState
-    {
-        get => _webShopMenu.PreviousState;
-        set => _webShopMenu.PreviousState = value;
-    }
-
-    private Dictionary<StatesEnum, IMenuState> States
-    {
-        get => _webShopMenu.States;
-        set => _webShopMenu.States = value;
-    }
-
-    private int CurrentChoice
-    {
-        get => _webShopMenu.CurrentChoice;
-        set => _webShopMenu.CurrentChoice = value;
-    }
-    private List<IState> StateHistory
-    {
-        get => _webShopMenu.StateHistory;
-        set => _webShopMenu.StateHistory = value;
     }
     private void PriceAscending()
     {
@@ -85,31 +49,16 @@ public class SortMenuState : IMenuState
         PrintOkGoBack();
     }
 
-    public void DisplayOptions()
+    protected internal override void DisplayOptions()
     {
         _webShopMenu.SetOptions(_options);
         _webShopMenu.AmountOfOptions = 4;
         Console.WriteLine(_strings.Sort.How);
         _webShopMenu.PrintOptions();
     }
-
-    public void ExecuteOption(int option)
-    {
-        _optionActions[option]();
-    }
-
-    public void ChangeState(StatesEnum stateEnum)
-    {
-        PreviousState = this;
-        CurrentState = States[stateEnum];
-        CurrentChoice = 1;
-        StateHistory.Add(this);
-    }
     private void PrintOkGoBack()
     {
-        Console.WriteLine();
-        Console.WriteLine("Wares sorted.");
-        Console.WriteLine();
+        PrintMessageWithPadding(_strings.Sort.WaresSorted);
         _webShopMenu.Commands["back"].Execute();
     }
 }
