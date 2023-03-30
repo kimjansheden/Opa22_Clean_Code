@@ -1,3 +1,4 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.MenuStates;
@@ -32,16 +33,16 @@ public class SortMenuState : IMenuState
         CurrentChoice = 1;
     }
 
-    private IMenuState CurrentState
+    private IState CurrentState
     {
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
 
-    private IMenuState PreviousState
+    private IState PreviousState
     {
-        get => _webShopMenu.PreviousMenuState;
-        set => _webShopMenu.PreviousMenuState = value;
+        get => _webShopMenu.PreviousState;
+        set => _webShopMenu.PreviousState = value;
     }
 
     private Dictionary<StatesEnum, IMenuState> States
@@ -62,25 +63,25 @@ public class SortMenuState : IMenuState
     }
     private void PriceAscending()
     {
-        _webShop.bubbleSort("price", true);
+        _webShop.Sort("price", true);
         PrintOkGoBack();
     }
 
     private void PriceDescending()
     {
-        _webShop.bubbleSort("price", false);
+        _webShop.Sort("price", false);
         PrintOkGoBack();
     }
 
     private void NameAscending()
     {
-        _webShop.bubbleSort("name", true);
+        _webShop.Sort("name", true);
         PrintOkGoBack();
     }
 
     private void NameDescending()
     {
-        _webShop.bubbleSort("name", false);
+        _webShop.Sort("name", false);
         PrintOkGoBack();
     }
 

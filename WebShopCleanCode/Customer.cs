@@ -8,20 +8,20 @@ namespace WebShopCleanCode
 {
     public class Customer
     {
-        public string Username { get; set; }
-        private string password;
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public int Age { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Username { get; }
+        private string Password { get; }
+        private string FirstName { get; }
+        private string LastName { get; }
+        private string Email { get; }
+        private int Age { get; }
+        private string Address { get; }
+        private string PhoneNumber { get; }
         public int Funds { get; set; }
-        public List<Order> Orders { get; set; }
+        public List<Order> Orders { get; }
         public Customer(string username, string password, string firstName, string lastName, string email, int age, string address, string phoneNumber)
         {
             Username = username;
-            this.password = password;
+            Password = password;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -43,16 +43,16 @@ namespace WebShopCleanCode
             {
                 return true;
             }
-            return password.Equals(this.password);
+            return password.Equals(Password);
         }
 
         public void PrintInfo()
         {
             Console.WriteLine();
             Console.Write("Username: " + Username + "");
-            if (password != null)
+            if (Password != null)
             {
-                Console.Write(", Password: " + password);
+                Console.Write(", Password: " + Password);
             }
             if (FirstName != null)
             {

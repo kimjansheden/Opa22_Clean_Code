@@ -1,20 +1,22 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
+using WebShopCleanCode.LoginStates;
 
 namespace WebShopCleanCode.MenuStates;
 
 public class LoginMenuState : IMenuState
 {
     private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _webShop;
+    private readonly WebShop _defaultWebShop;
     private Dictionary<int, Action> _optionActions;
     private string _loginState;
     private Strings _strings;
     private List<string> _options;
 
-    public LoginMenuState(WebShopMenu webShopMenu, WebShop webShop)
+    public LoginMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
     {
         _webShopMenu = webShopMenu;
-        _webShop = webShop;
+        _defaultWebShop = defaultWebShop;
         _strings = webShopMenu.Strings;
         _optionActions = new Dictionary<int, Action>
         {
@@ -33,16 +35,16 @@ public class LoginMenuState : IMenuState
         webShopMenu.CurrentChoice = 1;
     }
 
-    private IMenuState CurrentState
+    private IState CurrentState
     {
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
 
-    private IMenuState PreviousState
+    private IState PreviousState
     {
-        get => _webShopMenu.PreviousMenuState;
-        set => _webShopMenu.PreviousMenuState = value;
+        get => _webShopMenu.PreviousState;
+        set => _webShopMenu.PreviousState = value;
     }
 
     private Dictionary<StatesEnum, IMenuState> States
@@ -66,7 +68,7 @@ public class LoginMenuState : IMenuState
     {
         Console.WriteLine(_strings.Login.WriteUsername);
         string newUsername = Console.ReadLine();
-        foreach (Customer customer in _webShop.customers)
+        foreach (Customer customer in _defaultWebShop.Customers)
         {
             if (customer.Username.Equals(_webShopMenu.Username))
             {
@@ -312,9 +314,9 @@ public class LoginMenuState : IMenuState
         }
     
         Customer newCustomer = new Customer(newUsername, newPassword, firstName, lastName, email, age, address, phoneNumber);
-        _webShop.customers.Add(newCustomer);
-        _webShop.currentCustomer = newCustomer;
-        _webShop.LoginState = new LoggedInState(_webShop, _webShopMenu);
+        _defaultWebShop.Customers.Add(newCustomer);
+        _defaultWebShop.CurrentCustomer = newCustomer;
+        _webShopMenu.LoginState = new LoggedInState(_defaultWebShop, _webShopMenu);
         Console.WriteLine();
         Console.WriteLine(newCustomer.Username + " successfully added and is now logged in.");
         Console.WriteLine();
@@ -332,14 +334,14 @@ public class LoginMenuState : IMenuState
         else
         {
             bool found = false;
-            foreach (Customer customer in _webShop.customers)
+            foreach (Customer customer in _defaultWebShop.Customers)
             {
                 if (_webShopMenu.Username.Equals(customer.Username) && customer.CheckPassword(_webShopMenu.Password))
                 {
                     Console.WriteLine();
                     Console.WriteLine(customer.Username + " logged in.");
                     Console.WriteLine();
-                    _webShop.currentCustomer = customer;
+                    _defaultWebShop.CurrentCustomer = customer;
                     found = true;
                     ChangeState(StatesEnum.MainMenu);
                     break;

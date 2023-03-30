@@ -1,31 +1,23 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
+using WebShopCleanCode.LoginStates;
 
 namespace WebShopCleanCode.MenuStates;
 
 public class MainMenuState : IMenuState
 {
     private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _webShop;
-    private IMenuState _currentState;
-    private IMenuState _previousState;
-    private int _currentChoice;
-    private Dictionary<StatesEnum, IMenuState> _states;
-    private List<IState> _stateHistory;
+    private readonly WebShop _defaultWebShop;
     private string _loginState;
     private Strings _strings;
     private Dictionary<int, Action> _optionActions;
     private List<string> _options;
 
-    public MainMenuState(WebShopMenu webShopMenu, WebShop webShop)
+    public MainMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
     {
         _webShopMenu = webShopMenu;
-        _webShop = webShop;
-        _currentState = CurrentState;
-        _previousState = PreviousState;
-        _states = States;
-        _stateHistory = StateHistory;
+        _defaultWebShop = defaultWebShop;
         _strings = webShopMenu.Strings;
-        _currentChoice = CurrentChoice;
         _optionActions = new Dictionary<int, Action>
         {
             { 1, ShowWaresMenu },
@@ -40,16 +32,16 @@ public class MainMenuState : IMenuState
         };
         webShopMenu.CurrentChoice = 1;
     }
-    public IMenuState CurrentState
+    public IState CurrentState
     {
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
 
-    public IMenuState PreviousState
+    public IState PreviousState
     {
-        get => _webShopMenu.PreviousMenuState;
-        set => _webShopMenu.PreviousMenuState = value;
+        get => _webShopMenu.PreviousState;
+        set => _webShopMenu.PreviousState = value;
     }
 
     public Dictionary<StatesEnum, IMenuState> States
@@ -69,25 +61,25 @@ public class MainMenuState : IMenuState
     }
     private void SetLoginState()
     {
-        _loginState = _webShop.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
+        _loginState = _webShopMenu.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
         _options[_options.FindIndex(o => o == null || o == _strings.LogoutString || o == _strings.LoginString)] = _loginState;
     }
 
     private void LoginOrLogout()
     {
-        if (_webShop.LoginState is LoggedOutState)
+        if (_webShopMenu.LoginState is LoggedOutState)
         {
             ChangeState(StatesEnum.LoginMenu);
         }
-        else if (_webShop.LoginState is LoggedInState)
+        else if (_webShopMenu.LoginState is LoggedInState)
         {
-            _options[2] = "Login";
+            _options[2] = _strings.LoginString;
             Console.WriteLine();
-            Console.WriteLine(_webShop.currentCustomer.Username + " logged out.");
+            Console.WriteLine(_defaultWebShop.CurrentCustomer.Username + " logged out.");
             Console.WriteLine();
             CurrentChoice = 1;
-            _webShop.currentCustomer = null;
-            _webShop.LoginState = new LoggedOutState(_webShop, _webShopMenu);
+            _defaultWebShop.CurrentCustomer = null;
+            _webShopMenu.LoginState = new LoggedOutState(_webShopMenu);
             _webShopMenu.AmountOfOptions = 3;
         }
     }

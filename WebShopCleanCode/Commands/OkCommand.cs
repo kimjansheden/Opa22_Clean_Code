@@ -11,6 +11,9 @@ public class OkCommand : ICommand
     }
     public void Execute()
     {
-        _webShopMenu.CurrentState.ExecuteOption(_webShopMenu.CurrentChoice);
+        if (_webShopMenu.CurrentState is IMenuState menuState)
+        {
+            menuState.ExecuteOption(_webShopMenu.CurrentChoice);
+        }
     }
 }

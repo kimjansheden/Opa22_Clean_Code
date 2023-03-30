@@ -1,4 +1,7 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
+using WebShopCleanCode.LoginStates;
+
 namespace WebShopCleanCode.MenuStates;
 public class WaresMenuState : IMenuState
 {
@@ -31,16 +34,16 @@ public class WaresMenuState : IMenuState
         CurrentChoice = 1;
     }
 
-    public IMenuState CurrentState
+    public IState CurrentState
     {
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
 
-    public IMenuState PreviousState
+    public IState PreviousState
     {
-        get => _webShopMenu.PreviousMenuState;
-        set => _webShopMenu.PreviousMenuState = value;
+        get => _webShopMenu.PreviousState;
+        set => _webShopMenu.PreviousState = value;
     }
 
     public Dictionary<StatesEnum, IMenuState> States
@@ -63,29 +66,13 @@ public class WaresMenuState : IMenuState
 
     private void LoginOrLogout()
     {
-        if (_webShop.LoginState is LoggedInState)
-        {
-            _options[3] = _strings.LoginString;
-            Console.WriteLine();
-            Console.WriteLine(_webShop.currentCustomer.Username + " logged out.");
-            Console.WriteLine();
-            _webShop.currentCustomer = null;
-            _webShop.LoginState = new LoggedOutState(_webShop, _webShopMenu);
-            CurrentChoice = 1;
-        }
-        else if (_webShop.LoginState is LoggedOutState)
-        {
-            {
-                _webShopMenu.PreviousMenuState = this;
-                _webShopMenu.CurrentState = new LoginMenuState(_webShopMenu, _webShop);
-            }
-        }
+        ((ILoginState)_webShopMenu.LoginState).LoginOutHandle();
     }
 
     // Den här skulle kunna vara gemensam. Kanske ändra om IMenuState till abstract så alla kan dela på den?
     private void SetLoginState()
     {
-        _loginState = _webShop.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
+        _loginState = _webShopMenu.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
         _options[_options.FindIndex(o => o == null || o == _strings.LogoutString || o == _strings.LoginString)] = _loginState;
     }
 
@@ -103,7 +90,7 @@ public class WaresMenuState : IMenuState
     private void SeeWares()
     {
         Console.WriteLine();
-        foreach (Product product in _webShop.products)
+        foreach (Product product in _webShop.Products)
         {
             product.PrintInfo();
         }

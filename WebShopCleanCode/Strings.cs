@@ -1,5 +1,3 @@
-using WebShopCleanCode.Interfaces;
-
 namespace WebShopCleanCode;
 
 public class Strings
@@ -9,7 +7,12 @@ public class Strings
     public LoginStrings Login = new LoginStrings();
     public CustomerInfoStrings Customer = new CustomerInfoStrings();
     public SortStrings Sort = new SortStrings();
+    public PurchaseStrings Purchase = new PurchaseStrings();
 
+    public class PurchaseStrings
+    {
+        public string WhatPurchase = "What would you like to purchase?";
+    }
     public class MainStrings
     {
         public string Option1 = "See Wares";
@@ -50,10 +53,11 @@ public class Strings
         public string WriteUsername = "Please write your username.";
         public string UsernameExists = "Username already exists.";
         public string AKeyBoard = "A keyboard appears.";
+        public string MustBeLoggedIn = "You must be logged in to purchase wares.";
     }
 
     
-    public string Quit = "quit";
+    public string[] Quit = new[] { "quit", "q" };
     public string MenuWhat = "What would you like to do?";
     public string MainMenuWelcome = "Welcome to the WebShop!";
     public string LoginString = "Login";

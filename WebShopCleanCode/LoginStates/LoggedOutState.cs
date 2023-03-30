@@ -1,22 +1,46 @@
 using WebShopCleanCode.Interfaces;
-
-namespace WebShopCleanCode.MenuStates;
-
+namespace WebShopCleanCode.LoginStates;
 public class LoggedOutState : ILoginState
 {
-    private readonly WebShop _webShop;
-    private Strings _strings;
+    private readonly Strings _strings;
     private readonly WebShopMenu _webShopMenu;
-    public LoggedOutState(WebShop webShop, WebShopMenu webShopMenu)
+    private IState CurrentState
     {
-        _webShop = webShop;
+        get => _webShopMenu.CurrentState;
+        set => _webShopMenu.CurrentState = value;
+    }
+    private Dictionary<StatesEnum, IMenuState> States
+    {
+        get => _webShopMenu.States;
+        set => _webShopMenu.States = value;
+    }
+    private int CurrentChoice
+    {
+        get => _webShopMenu.CurrentChoice;
+        set => _webShopMenu.CurrentChoice = value;
+    }
+    public LoggedOutState(WebShopMenu webShopMenu)
+    {
         _webShopMenu = webShopMenu;
         _strings = webShopMenu.Strings;
     }
     public void RequestHandle()
     {
         Console.WriteLine();
-        Console.WriteLine("You must be logged in to purchase wares.");
+        Console.WriteLine(_strings.Login.MustBeLoggedIn);
         Console.WriteLine();
+        _webShopMenu.Commands["back"].Execute();
+        _webShopMenu.DisplayOptions();
+    }
+
+    public void LoginOutHandle()
+    {
+        ChangeState(StatesEnum.LoginMenu);
+    }
+
+    public void ChangeState(StatesEnum stateEnum)
+    {
+        CurrentState = States[stateEnum];
+        CurrentChoice = 1;
     }
 }

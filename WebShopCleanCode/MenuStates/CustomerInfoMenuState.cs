@@ -1,17 +1,20 @@
+using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Interfaces;
+using WebShopCleanCode.LoginStates;
+
 namespace WebShopCleanCode.MenuStates;
 public class CustomerInfoMenuState : IMenuState
 {
     private readonly WebShopMenu _webShopMenu;
-    private readonly WebShop _webShop;
+    private readonly WebShop _defaultWebShop;
     private Dictionary<int, Action> _optionActions;
     private string _loginState;
     private Strings _strings;
     private List<string> _options;
-    public CustomerInfoMenuState(WebShopMenu webShopMenu, WebShop webShop)
+    public CustomerInfoMenuState(WebShopMenu webShopMenu, WebShop defaultWebShop)
     {
         _webShopMenu = webShopMenu;
-        _webShop = webShop;
+        _defaultWebShop = defaultWebShop;
         _strings = webShopMenu.Strings;
         _optionActions = new Dictionary<int, Action>
         {
@@ -28,16 +31,16 @@ public class CustomerInfoMenuState : IMenuState
         webShopMenu.CurrentChoice = 1;
     }
 
-    private IMenuState CurrentState
+    private IState CurrentState
     {
         get => _webShopMenu.CurrentState;
         set => _webShopMenu.CurrentState = value;
     }
 
-    private IMenuState PreviousState
+    private IState PreviousState
     {
-        get => _webShopMenu.PreviousMenuState;
-        set => _webShopMenu.PreviousMenuState = value;
+        get => _webShopMenu.PreviousState;
+        set => _webShopMenu.PreviousState = value;
     }
 
     private Dictionary<StatesEnum, IMenuState> States
@@ -71,7 +74,7 @@ public class CustomerInfoMenuState : IMenuState
             }
             else
             {
-                _webShop.currentCustomer.Funds += amount;
+                _defaultWebShop.CurrentCustomer.Funds += amount;
                 Console.WriteLine();
                 Console.WriteLine(amount + " added to your profile.");
                 Console.WriteLine();
@@ -87,23 +90,23 @@ public class CustomerInfoMenuState : IMenuState
 
     private void SeeInfo()
     {
-        _webShop.currentCustomer.PrintInfo();
+        _defaultWebShop.CurrentCustomer.PrintInfo();
     }
 
     private void SeeOrders()
     {
-        _webShop.currentCustomer.PrintOrders();
+        _defaultWebShop.CurrentCustomer.PrintOrders();
     }
 
     public void DisplayOptions()
     {
-        if (_webShop.LoginState is LoggedOutState)
+        if (_webShopMenu.LoginState is LoggedOutState)
         {
             Console.WriteLine();
             Console.WriteLine("Nobody is logged in.");
             Console.WriteLine();
         }
-        else if (_webShop.LoginState is LoggedInState)
+        else if (_webShopMenu.LoginState is LoggedInState)
         {
             _webShopMenu.SetOptions(_options);
             _webShopMenu.AmountOfOptions = 3;

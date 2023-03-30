@@ -7,5 +7,7 @@ public enum StatesEnum
     PurchaseMenu,
     MainMenu,
     CustomerMenu,
-    SortMenu
+    SortMenu,
+    LoggedIn,
+    LoggedOut
 }
