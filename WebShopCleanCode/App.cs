@@ -1,16 +1,16 @@
 using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Commands;
 using WebShopCleanCode.Interfaces;
-using WebShopCleanCode.LoginStates;
-using WebShopCleanCode.MenuStates;
+using WebShopCleanCode.States.LoginStates;
+using WebShopCleanCode.States.MenuStates;
 
 namespace WebShopCleanCode;
 
-public class WebShopMenu : IMenu
+public class App : IMenu
 {
     private readonly Dictionary<string, ICommand> _commands;
-    private Dictionary<StatesEnum, MenuState> _menuStates;
-    private Dictionary<StatesEnum, ILoginState> _loginStates;
+    private Dictionary<string, MenuState> _menuStates;
+    private Dictionary<string, LoginState> _loginStates;
     
     private List<string> _options;
     private string[] _quitCommands;
@@ -20,11 +20,11 @@ public class WebShopMenu : IMenu
     private int _amountOfOptions;
     public string Username = null;
     public string Password = null;
-    private ICommand _currentCommand = null;
-    private IState _loginState;
-    private IState _previousState;
-    private IState _currentMenuState;
-    private List<IState> _stateHistory;
+    private ICommand _currentCommand;
+    private State _loginState;
+    private State _previousState;
+    private State _currentMenuState;
+    private List<State> _stateHistory;
     public int CurrentChoice
     {
         get => _currentChoice;
@@ -61,13 +61,13 @@ public class WebShopMenu : IMenu
         set => _currentCommand = value;
     }
 
-    public IState CurrentState
+    public State CurrentState
     {
         get => _currentMenuState;
         set => _currentMenuState = value;
     }
 
-    public IState PreviousState
+    public State PreviousState
     {
         get => _previousState;
         set => _previousState = value;
@@ -75,24 +75,24 @@ public class WebShopMenu : IMenu
 
     public Dictionary<string, ICommand> Commands => _commands;
 
-    public Dictionary<StatesEnum, MenuState> States
+    public Dictionary<string, MenuState> MenuStates
     {
         get => _menuStates;
         set => _menuStates = value;
     }
 
-    public List<IState> StateHistory
+    public List<State> StateHistory
     {
         get => _stateHistory;
         set => _stateHistory = value;
     }
 
-    public Dictionary<StatesEnum, ILoginState> LoginStates
+    public Dictionary<string, LoginState> LoginStates
     {
         get => _loginStates;
         set => _loginStates = value;
     }
-    public IState LoginState
+    public State LoginState
     {
         get => _loginState;
         set => _loginState = value;
@@ -102,6 +102,7 @@ public class WebShopMenu : IMenu
     /// Custom constructor.
     /// </summary>
     /// <param name="webShop"></param>
+    /// <param name="strings"></param>
     /// <param name="commands"></param>
     /// <param name="options"></param>
     /// <param name="quitCommands">Enter one och more quit commands.</param>
@@ -109,9 +110,10 @@ public class WebShopMenu : IMenu
     /// <param name="startLoginState"></param>
     /// <param name="menuStates"></param>
     /// <param name="loginStates"></param>
-    public WebShopMenu(WebShop webShop, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startMenuState, ILoginState startLoginState, Dictionary<StatesEnum, MenuState> menuStates, Dictionary<StatesEnum, ILoginState> loginStates)
+    public App(WebShop webShop, Strings strings, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startMenuState, LoginState startLoginState, Dictionary<string, MenuState> menuStates, Dictionary<string, LoginState> loginStates)
     {
         _webShop = webShop;
+        _strings = strings;
         _commands = commands;
         _options = options;
         _menuStates = menuStates;
@@ -125,10 +127,10 @@ public class WebShopMenu : IMenu
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public WebShopMenu()
+    public App()
     {
         _webShop = new DefaultWebShop();
-        _strings = new Strings();
+        _strings = new DefaultStrings();
         _commands = new Dictionary<string, ICommand>();
         _options = new List<string>();
         CreateWebShop(defaultConstructor: true);
@@ -140,33 +142,33 @@ public class WebShopMenu : IMenu
 
     private void CreateDefaultStates()
     {
-        _loginStates = new Dictionary<StatesEnum, ILoginState>();
-        _loginStates.Add(StatesEnum.LoggedIn, new LoggedInState(_webShop, this));
-        _loginStates.Add(StatesEnum.LoggedOut, new LoggedOutState(this));
+        _loginStates = new Dictionary<string, LoginState>();
+        _loginStates.Add("LoggedIn", new LoggedInState(_webShop, this));
+        _loginStates.Add("LoggedOut", new LoggedOutState(this));
         
-        _menuStates = new Dictionary<StatesEnum, MenuState>();
-        _menuStates.Add(StatesEnum.CustomerMenu, new CustomerInfoMenuState(this, _webShop));
-        _menuStates.Add(StatesEnum.LoginMenu, new LoginMenuState(this, _webShop));
-        _menuStates.Add(StatesEnum.MainMenu, new MainMenuState(this, _webShop));
-        _menuStates.Add(StatesEnum.PurchaseMenu, new PurchaseMenuState(this, _webShop));
-        _menuStates.Add(StatesEnum.SortMenu, new SortMenuState(this, _webShop));
-        _menuStates.Add(StatesEnum.WaresMenu, new WaresMenuState(this, _webShop));
+        _menuStates = new Dictionary<string, MenuState>();
+        _menuStates.Add("CustomerMenu", new CustomerInfoMenuState(this, _webShop));
+        _menuStates.Add("LoginMenu", new LoginMenuState(this, _webShop));
+        _menuStates.Add("MainMenu", new MainMenuState(this, _webShop));
+        _menuStates.Add("PurchaseMenu", new PurchaseMenuState(this, _webShop));
+        _menuStates.Add("SortMenu", new SortMenuState(this, _webShop));
+        _menuStates.Add("WaresMenu", new WaresMenuState(this, _webShop));
         
-        _currentMenuState = _menuStates[StatesEnum.MainMenu];
-        _loginState = _loginStates[StatesEnum.LoggedOut];
+        _currentMenuState = _menuStates["MainMenu"];
+        _loginState = _loginStates["LoggedOut"];
     }
 
     private void CreateDefaultOptions()
     {
-        _options.Add(Strings.Main.Option1);
-        _options.Add(Strings.Main.Option2);
-        _options.Add(Strings.Main.Option3);
-        _options.Add(Strings.Main.Option4);
+        _options.Add(((DefaultStrings)Strings).Main.Option1);
+        _options.Add(((DefaultStrings)Strings).Main.Option2);
+        _options.Add(((DefaultStrings)Strings).Main.Option3);
+        _options.Add(((DefaultStrings)Strings).Main.Option4);
     }
 
     private void CreateDefaultCommands()
     {
-        _quitCommands = Strings.Quit;
+        _quitCommands = ((DefaultStrings)Strings).Quit;
 
         Commands.Add("left", new LeftCommand(this));
         Commands.Add("l", new LeftCommand(this));
@@ -191,7 +193,7 @@ public class WebShopMenu : IMenu
     /// Constructor for testing purposes.
     /// </summary>
     /// <param name="loggedInCustomer">True if you want to start with a pre made logged in customer.</param> 
-    public WebShopMenu(bool loggedInCustomer) : this()
+    public App(bool loggedInCustomer) : this()
     {
         if (loggedInCustomer)
         {
@@ -207,8 +209,8 @@ public class WebShopMenu : IMenu
             
             _webShop.Customers.Add(newCustomer);
             _webShop.CurrentCustomer = newCustomer;
-            _loginState = _loginStates[StatesEnum.LoggedIn];
-            Options[2] = _strings.LogoutString;
+            _loginState = _loginStates["LoggedIn"];
+            Options[2] = ((DefaultStrings)Strings).LogoutString;
         }
     }
     
@@ -218,12 +220,12 @@ public class WebShopMenu : IMenu
         CurrentCustomer = _webShop.CurrentCustomer;
         CurrentChoice = 1;
         PreviousState = _currentMenuState;
-        _stateHistory = new List<IState>();
+        _stateHistory = new List<State>();
     }
 
     public void Run()
     {
-        Console.WriteLine(Strings.MainMenuWelcome);
+        Console.WriteLine(_strings.MainMenuWelcome);
         string input = "";
         
         while (CurrentCommand is not QuitCommand)
@@ -238,10 +240,7 @@ public class WebShopMenu : IMenu
 
     public void DisplayOptions()
     {
-        if (CurrentState is MenuState menuState)
-        {
-            menuState.DisplayOptions();
-        }
+        if (CurrentState is MenuState menuState) menuState.DisplayOptions();
     }
 
     public void PrintOptions()

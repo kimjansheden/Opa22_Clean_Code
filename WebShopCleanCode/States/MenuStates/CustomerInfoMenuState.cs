@@ -1,27 +1,26 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.LoginStates;
+using WebShopCleanCode.States.LoginStates;
 
-namespace WebShopCleanCode.MenuStates;
+namespace WebShopCleanCode.States.MenuStates;
 public class CustomerInfoMenuState : MenuState
 {
-    public CustomerInfoMenuState(WebShopMenu webShopMenu, WebShop webShop)
+    public CustomerInfoMenuState(App app, WebShop webShop)
     {
-        _webShopMenu = webShopMenu;
-        _webShop = webShop;
-        _strings = webShopMenu.Strings;
-        _optionActions = new Dictionary<int, Action>
+        App = app;
+        WebShop = webShop;
+        OptionActions = new Dictionary<int, Action>
         {
             { 1, SeeOrders },
             { 2, SeeInfo },
             { 3, AddFunds }
         };
-        _options = new List<string>
+        Options = new List<string>
         {
-            _webShopMenu.Strings.Customer.Option1,
-            _webShopMenu.Strings.Customer.Option2,
-            _webShopMenu.Strings.Customer.Option3,
+            ((DefaultStrings)Strings).Customer.Option1,
+            ((DefaultStrings)Strings).Customer.Option2,
+            ((DefaultStrings)Strings).Customer.Option3,
         };
-        webShopMenu.CurrentChoice = 1;
+        app.CurrentChoice = 1;
     }
     private void AddFunds()
     {
@@ -38,7 +37,7 @@ public class CustomerInfoMenuState : MenuState
             }
             else
             {
-                _webShop.CurrentCustomer.Funds += amount;
+                CurrentCustomer.Funds += amount;
                 Console.WriteLine();
                 Console.WriteLine(amount + " added to your profile.");
                 Console.WriteLine();
@@ -54,26 +53,28 @@ public class CustomerInfoMenuState : MenuState
 
     private void SeeInfo()
     {
-        _webShop.CurrentCustomer.PrintInfo();
+        CurrentCustomer.PrintInfo();
     }
 
     private void SeeOrders()
     {
-        _webShop.CurrentCustomer.PrintOrders();
+        CurrentCustomer.PrintOrders();
     }
 
     protected internal override void DisplayOptions()
     {
-        if (_webShopMenu.LoginState is LoggedOutState)
+        if (App.LoginState is LoggedOutState)
         {
-            PrintMessageWithPadding(_strings.Login.NobodyLoggedIn);
+            PrintMessageWithPadding(((DefaultStrings)Strings).Login.NobodyLoggedIn);
+            App.Commands["back"].Execute();
+            App.DisplayOptions();
         }
-        else if (_webShopMenu.LoginState is LoggedInState)
+        else if (App.LoginState is LoggedInState)
         {
-            _webShopMenu.SetOptions(_options);
-            _webShopMenu.AmountOfOptions = 3;
-            Console.WriteLine(_strings.MenuWhat);
-            _webShopMenu.PrintOptions();
+            App.SetOptions(Options);
+            AmountOfOptions = 3;
+            Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
+            App.PrintOptions();
         }
     }
 }

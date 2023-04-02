@@ -1,72 +1,41 @@
-using WebShopCleanCode.Interfaces;
-using WebShopCleanCode.LoginStates;
+using WebShopCleanCode.States.LoginStates;
 
 namespace WebShopCleanCode.AbstractClasses;
 
-public abstract class MenuState : IState
+public abstract class MenuState : State
 {
-    protected WebShopMenu _webShopMenu { get; set; }
-    protected WebShop _webShop { get; set; }
-    protected Strings _strings { get; set; }
-    protected Dictionary<int, Action> _optionActions;
-    protected string _loginState;
-    protected List<string> _options;
+    private List<string> _options;
+    private string _loginState;
+    private Dictionary<int, Action> _optionActions;
 
-    protected IState CurrentState
+    protected Dictionary<int, Action> OptionActions
     {
-        get => _webShopMenu.CurrentState;
-        set => _webShopMenu.CurrentState = value;
+        get => _optionActions;
+        init => _optionActions = value;
     }
 
-    protected IState PreviousState
+    protected string LoginState
     {
-        get => _webShopMenu.PreviousState;
-        set => _webShopMenu.PreviousState = value;
+        get => _loginState;
+        private set => _loginState = value;
     }
 
-    protected Dictionary<StatesEnum, MenuState> States
+    protected List<string> Options
     {
-        get => _webShopMenu.States;
-        set => _webShopMenu.States = value;
-    }
-
-    protected int CurrentChoice
-    {
-        get => _webShopMenu.CurrentChoice;
-        set => _webShopMenu.CurrentChoice = value;
-    }
-
-    protected List<IState> StateHistory
-    {
-        get => _webShopMenu.StateHistory;
-        set => _webShopMenu.StateHistory = value;
+        get => _options;
+        init => _options = value;
     }
 
     protected internal abstract void DisplayOptions();
 
     protected internal virtual void ExecuteOption(int option)
     {
-        _optionActions[option]();
+        OptionActions[option]();
     }
-
-    protected void ChangeState(StatesEnum stateEnum)
-    {
-        PreviousState = this;
-        CurrentState = States[stateEnum];
-        CurrentChoice = 1;
-        StateHistory.Add(this);
-    }
-
-    protected void PrintMessageWithPadding(string message)
-    {
-        Console.WriteLine();
-        Console.WriteLine(message);
-        Console.WriteLine();
-    }
-
+    
     protected void SetLoginState()
     {
-        _loginState = _webShopMenu.LoginState is LoggedInState ? _strings.LogoutString : _strings.LoginString;
-        _options[_options.FindIndex(o => o == null || o == _strings.LogoutString || o == _strings.LoginString)] = _loginState;
+        LoginState = App.LoginState is LoggedInState ? Strings.LogoutString : Strings.LoginString;
+        Options[Options.FindIndex(o => o == null || o == Strings.LogoutString || o == Strings.LoginString)] = LoginState;
     }
 }

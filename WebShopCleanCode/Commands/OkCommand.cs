@@ -5,13 +5,13 @@ namespace WebShopCleanCode.Commands;
 
 public class OkCommand : ICommand
 {
-    private readonly WebShopMenu _webShopMenu;
-    public OkCommand(WebShopMenu webShopMenu)
+    private readonly App _app;
+    public OkCommand(App app)
     {
-        _webShopMenu = webShopMenu;
+        _app = app;
     }
     public void Execute()
     {
-        ((MenuState)_webShopMenu.CurrentState).ExecuteOption(_webShopMenu.CurrentChoice);
+        ((MenuState)_app.CurrentState).ExecuteOption(_app.CurrentChoice);
     }
 }

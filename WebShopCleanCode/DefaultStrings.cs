@@ -1,6 +1,8 @@
+using WebShopCleanCode.AbstractClasses;
+
 namespace WebShopCleanCode;
 
-public class Strings
+public class DefaultStrings : Strings
 {
     public MainStrings Main = new MainStrings();
     public WaresStrings Wares = new WaresStrings();
@@ -83,7 +85,4 @@ public class Strings
     
     public string[] Quit = new[] { "quit", "q" };
     public string MenuWhat { get; set; } = "What would you like to do?";
-    public string MainMenuWelcome { get; set; } = "Welcome to the WebShop!";
-    public string LoginString { get; set; } = "Login";
-    public string LogoutString { get; set; } = "Logout";
 }

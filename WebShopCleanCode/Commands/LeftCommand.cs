@@ -3,16 +3,16 @@ using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode.Commands;
 public class LeftCommand : ICommand
 {
-    private readonly WebShopMenu _webShopMenu;
-    public LeftCommand(WebShopMenu webShopMenu)
+    private readonly App _app;
+    public LeftCommand(App app)
     {
-        _webShopMenu = webShopMenu;
+        _app = app;
     }
     public void Execute()
     {
-        if (_webShopMenu.CurrentChoice > 1)
+        if (_app.CurrentChoice > 1)
         {
-            _webShopMenu.CurrentChoice--;
+            _app.CurrentChoice--;
         }
     }
 }

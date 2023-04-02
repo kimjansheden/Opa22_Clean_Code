@@ -4,22 +4,21 @@ using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode.Commands;
 public class BackCommand : ICommand
 {
-    private readonly WebShopMenu _webShopMenu;
-    public BackCommand(WebShopMenu webShopMenu)
+    private readonly App _app;
+    public BackCommand(App app)
     {
-        _webShopMenu = webShopMenu;
+        _app = app;
     }
 
-    private IState LastState => (_webShopMenu.StateHistory.Count != 0 ? _webShopMenu.StateHistory[^1] : default)!;
+    private State LastState => (_app.StateHistory.Count != 0 ? _app.StateHistory[^1] : default)!;
 
     public void Execute()
     {
-        
         if (LastState is MenuState menuState)
         {
-            _webShopMenu.CurrentState = menuState;
-            _webShopMenu.StateHistory.Remove(LastState);
-            _webShopMenu.CurrentChoice = 1;
+            _app.CurrentState = menuState;
+            _app.StateHistory.Remove(LastState);
+            _app.CurrentChoice = 1;
         }
     }
 }

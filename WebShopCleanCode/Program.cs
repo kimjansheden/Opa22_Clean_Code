@@ -5,8 +5,8 @@
         public static void Main(string[] args)
         {
             // WebShopMenu webShopMenu = new WebShopMenu();
-            WebShopMenu webShopMenu = new WebShopMenu(loggedInCustomer: true);
-            webShopMenu.Run();
+            App app = new App(loggedInCustomer: true);
+            app.Run();
             
             // Custom constructor:
             //WebShop webShop = new WebShop();
