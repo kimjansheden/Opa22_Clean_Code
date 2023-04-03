@@ -10,14 +10,6 @@ public class LoginMenuState : MenuState
         // I decided to use the Builder Design Pattern here to separate the construction of the Customer from the interaction with the user.
         _customerBuilder = new CustomerBuilder();
     }
-    protected internal override void DisplayOptions()
-    {
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).Login.Menu);
-        App.PrintOptions();
-    }
-
     protected internal override void Initialize()
     {
         OptionActions = new Dictionary<int, Action>
@@ -35,6 +27,13 @@ public class LoginMenuState : MenuState
             ((DefaultStrings)Strings).Login.Option4
         };
         CurrentChoice = 1;
+    }
+    protected internal override void DisplayOptions()
+    {
+        App.SetOptions(Options);
+        AmountOfOptions = 4;
+        Console.WriteLine(((DefaultStrings)Strings).Login.Menu);
+        App.PrintOptions();
     }
 
     protected override void ChangeState(string state)

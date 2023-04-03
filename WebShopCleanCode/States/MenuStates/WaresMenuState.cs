@@ -7,6 +7,34 @@ public class WaresMenuState : MenuState
     {
         
     }
+    
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
+        {
+            { 1, SeeWares },
+            { 2, ShowPurchaseWaresMenu },
+            { 3, SortWares },
+            {4, LoginOrLogout}
+        };
+        Options = new List<string>
+        {
+            ((DefaultStrings)Strings).Wares.Option1,
+            ((DefaultStrings)Strings).Wares.Option2,
+            ((DefaultStrings)Strings).Wares.Option3,
+            LoginStateString
+        };
+        CurrentChoice = 1;
+    }
+    
+    protected internal override void DisplayOptions()
+    {
+        SetLoginState();
+        App.SetOptions(Options);
+        AmountOfOptions = 4;
+        Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
+        App.PrintOptions();
+    }
 
     private void LoginOrLogout()
     {
@@ -31,33 +59,5 @@ public class WaresMenuState : MenuState
             product.PrintInfo();
         }
         Console.WriteLine();
-    }
-
-    protected internal override void DisplayOptions()
-    {
-        SetLoginState();
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
-        App.PrintOptions();
-    }
-
-    protected internal override void Initialize()
-    {
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, SeeWares },
-            { 2, ShowPurchaseWaresMenu },
-            { 3, SortWares },
-            {4, LoginOrLogout}
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Wares.Option1,
-            ((DefaultStrings)Strings).Wares.Option2,
-            ((DefaultStrings)Strings).Wares.Option3,
-            LoginStateString
-        };
-        CurrentChoice = 1;
     }
 }

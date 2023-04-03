@@ -7,6 +7,26 @@ public class CustomerInfoMenuState : MenuState
     {
         
     }
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
+        {
+            { 1, SeeOrders },
+            { 2, SeeInfo },
+            { 3, AddFunds }
+        };
+        Options = new List<string>
+        {
+            ((DefaultStrings)Strings).Customer.Option1,
+            ((DefaultStrings)Strings).Customer.Option2,
+            ((DefaultStrings)Strings).Customer.Option3,
+        };
+        CurrentChoice = 1;
+    }
+    protected internal override void DisplayOptions()
+    {
+        LoginState.RequestHandle(this);
+    }
     private void AddFunds()
     {
         Console.WriteLine(((DefaultStrings)Strings).Customer.HowManyFunds);
@@ -38,27 +58,5 @@ public class CustomerInfoMenuState : MenuState
     private void SeeOrders()
     {
         CurrentCustomer.PrintOrders();
-    }
-
-    protected internal override void DisplayOptions()
-    {
-        LoginState.RequestHandle(this);
-    }
-
-    protected internal override void Initialize()
-    {
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, SeeOrders },
-            { 2, SeeInfo },
-            { 3, AddFunds }
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Customer.Option1,
-            ((DefaultStrings)Strings).Customer.Option2,
-            ((DefaultStrings)Strings).Customer.Option3,
-        };
-        CurrentChoice = 1;
     }
 }

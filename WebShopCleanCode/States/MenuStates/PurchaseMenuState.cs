@@ -7,15 +7,15 @@ public class PurchaseMenuState : MenuState
     public PurchaseMenuState(App app, WebShop webShop) : base(app, webShop)
     {
     }
+    
+    protected internal override void Initialize()
+    {
+        
+    }
 
     protected internal override void DisplayOptions()
     {
         LoginState.RequestHandle(this);
-    }
-
-    protected internal override void Initialize()
-    {
-        
     }
 
     protected internal override void ExecuteOption(int option)
