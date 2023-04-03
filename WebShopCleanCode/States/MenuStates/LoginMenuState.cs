@@ -1,84 +1,116 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.States.LoginStates;
 
 namespace WebShopCleanCode.States.MenuStates;
 
 public class LoginMenuState : MenuState
 {
-    private string? _choice;
-    private string? _newPassword;
-    private string? _newUsername;
-    private string? _firstName;
-    private string? _lastName;
-    private string? _email;
-    private int _age;
-    private string? _address;
-    private string? _phoneNumber;
-    private CustomerBuilder _customerBuilder;
+    private readonly CustomerBuilder _customerBuilder;
     public LoginMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        _choice = "";
-        _age = -1;
+        // I decided to use the Builder Design Pattern here to separate the construction of the Customer from the interaction with the user.
         _customerBuilder = new CustomerBuilder();
+    }
+    protected internal override void DisplayOptions()
+    {
+        App.SetOptions(Options);
+        AmountOfOptions = 4;
+        Console.WriteLine(((DefaultStrings)Strings).Login.Menu);
+        App.PrintOptions();
+    }
+
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
+        {
+            { 1, SetUsername },
+            { 2, SetPassword },
+            { 3, Login },
+            { 4, Register }
+        };
+        Options = new List<string>
+        {
+            ((DefaultStrings)Strings).Login.Option1,
+            ((DefaultStrings)Strings).Login.Option2,
+            ((DefaultStrings)Strings).Login.Option3,
+            ((DefaultStrings)Strings).Login.Option4
+        };
+        CurrentChoice = 1;
+    }
+
+    protected override void ChangeState(string state)
+    {
+        CurrentState = States[state];
+        CurrentChoice = 1;
     }
     private void Register()
     {
-        _newUsername = PromptForInput(((DefaultStrings)Strings).Login.WriteUsername);
-        CheckIfUserExists();
-        
-        _choice = PromptForYesOrNo(promptMessage:((DefaultStrings)Strings).Login.WantPassword);
-        if (_choice.Equals("y"))
-        {
-            _newPassword = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WritePassword,
-                wantErrorMessage: true);
-        }
+        SetCustomerInfo();
+        AddNewCustomer();
+    }
 
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantFirstName);
-        if (_choice.Equals("y"))
-        {
-            _firstName = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteFirstName, wantErrorMessage: true);
-        }
-
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantLastName);
-        if (_choice.Equals("y"))
-        {
-            _lastName = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteLastName,
-                wantErrorMessage: true);
-        }
-
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantEmail);
-        if (_choice.Equals("y"))
-        {
-            _email = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteEmail,
-                wantErrorMessage: true);
-        }
-
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantAge);
-        if (_choice.Equals("y"))
-        {
-            PromptForAge();
-        }
-
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantAddress);
-        if (_choice.Equals("y"))
-        {
-            _address = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteAddress,
-                wantErrorMessage: true);
-        }
-
-        _choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantPhone);
-        if (_choice.Equals("y"))
-        {
-            _phoneNumber = PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WritePhone,
-                wantErrorMessage: true);
-        }
-
-        Customer newCustomer = new Customer(_newUsername, _newPassword, _firstName, _lastName, _email, _age, _address, _phoneNumber);
+    private void AddNewCustomer()
+    {
+        Customer newCustomer = _customerBuilder.Build();
         WebShop.Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
-        LoginState = new LoggedInState(WebShop, App);
+        LoginState = App.LoginStates["LoggedIn"];
         PrintMessageWithPadding(newCustomer.Username + " successfully added and is now logged in.");
         ChangeState("MainMenu");
+    }
+
+    private void SetCustomerInfo()
+    {
+        _customerBuilder.SetUsername(PromptForInput(((DefaultStrings)Strings).Login.WriteUsername));
+        CheckIfUserExists();
+        var choice = "";
+
+        choice = PromptForYesOrNo(promptMessage: ((DefaultStrings)Strings).Login.WantPassword);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetPassword(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WritePassword,
+                wantErrorMessage: true)!);
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantFirstName);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetFirstName(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteFirstName,
+                wantErrorMessage: true)!);
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantLastName);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetLastName(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteLastName,
+                wantErrorMessage: true)!);
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantEmail);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetEmail(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteEmail,
+                wantErrorMessage: true)!);
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantAge);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetAge(PromptForAge());
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantAddress);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetAddress(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WriteAddress,
+                wantErrorMessage: true)!);
+        }
+
+        choice = PromptForYesOrNo(((DefaultStrings)Strings).Login.WantPhone);
+        if (choice.Equals("y"))
+        {
+            _customerBuilder.SetPhoneNumber(PromptForInput(promptMessage: ((DefaultStrings)Strings).Login.WritePhone,
+                wantErrorMessage: true)!);
+        }
     }
 
     private void CheckIfUserExists()
@@ -136,39 +168,6 @@ public class LoginMenuState : MenuState
         Console.WriteLine();
     }
 
-    protected internal override void DisplayOptions()
-    {
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).Login.Menu);
-        App.PrintOptions();
-    }
-
-    protected internal override void Initialize()
-    {
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, SetUsername },
-            { 2, SetPassword },
-            { 3, Login },
-            { 4, Register }
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Login.Option1,
-            ((DefaultStrings)Strings).Login.Option2,
-            ((DefaultStrings)Strings).Login.Option3,
-            ((DefaultStrings)Strings).Login.Option4
-        };
-        CurrentChoice = 1;
-    }
-
-    protected override void ChangeState(string state)
-    {
-        CurrentState = States[state];
-        CurrentChoice = 1;
-    }
-
     /// <summary>
     /// Prompt the user for input. If you only write a promptMessage, the user input can be null. If you also want an errorMessage, the user input can't be null. The user will have to write something, otherwise the error message will loop.
     /// </summary>
@@ -215,17 +214,20 @@ public class LoginMenuState : MenuState
         
         return input;
     }
-    private void PromptForAge()
+    private int PromptForAge()
     {
         Console.WriteLine(((DefaultStrings)Strings).Login.WriteAge);
         bool success;
+        int age;
         do
         {
-            success = int.TryParse(Console.ReadLine(), out _age);
+            success = int.TryParse(Console.ReadLine(), out age);
             if (!success)
             {
                 PrintMessageWithPadding(((DefaultStrings)Strings).Login.WriteNumber);    
             }
         } while (!success);
+
+        return age;
     }
 }
