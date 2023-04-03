@@ -4,12 +4,7 @@ namespace WebShopCleanCode
     public class DefaultWebShop : WebShop
     {
         private readonly Database _database = new Database();
-        public DefaultWebShop()
-        {
-            Products = _database.GetProducts();
-            Customers = _database.GetCustomers();
-        }
-        
+
         /// <summary>
         /// Bubble Sort.
         /// </summary>
@@ -88,6 +83,12 @@ namespace WebShopCleanCode
                     }
                 }
             }
+        }
+
+        protected internal override void Initialize()
+        {
+            Products = _database.GetProducts();
+            Customers = _database.GetCustomers();
         }
     }
 }

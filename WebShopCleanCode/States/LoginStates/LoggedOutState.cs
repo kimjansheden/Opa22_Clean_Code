@@ -1,23 +1,43 @@
 using WebShopCleanCode.AbstractClasses;
+using WebShopCleanCode.States.MenuStates;
 
 namespace WebShopCleanCode.States.LoginStates;
 
 public class LoggedOutState : LoginState
 {
-    public LoggedOutState(App app)
+    public LoggedOutState(App app) : base(app)
     {
-        App = app;
+        
     }
 
-    protected internal override void RequestHandle()
+    protected internal override void RequestHandle(State state)
+    {
+        if (state is PurchaseMenuState)
+        {
+            PurchaseMenuHandle();    
+        }
+        else if (state is CustomerInfoMenuState)
+        {
+            CustomerInfoMenuHandle();
+        }
+    }
+
+    protected internal override void LoginLogoutHandle()
+    {
+        ChangeState("LoginMenu");
+    }
+    
+    private void PurchaseMenuHandle()
     {
         PrintMessageWithPadding(((DefaultStrings)Strings).Login.MustBeLoggedIn);
         App.Commands["back"].Execute();
         App.DisplayOptions();
     }
 
-    protected internal override void LoginLogoutHandle()
+    private void CustomerInfoMenuHandle()
     {
-        ChangeState("LoginMenu");
+        PrintMessageWithPadding(((DefaultStrings)Strings).Login.NobodyLoggedIn);
+        App.Commands["back"].Execute();
+        App.DisplayOptions();
     }
 }

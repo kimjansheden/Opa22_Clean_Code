@@ -1,16 +1,28 @@
 using WebShopCleanCode.AbstractClasses;
+using WebShopCleanCode.States.MenuStates;
 
 namespace WebShopCleanCode.States.LoginStates;
 
 public class LoggedInState : LoginState
 {
-    public LoggedInState(WebShop webShop, App app)
+    public LoggedInState(WebShop webShop, App app) : base(app, webShop)
     {
-        WebShop = webShop;
-        App = app;
+        
     }
 
-    protected internal override void RequestHandle()
+    protected internal override void RequestHandle(State state)
+    {
+        if (state is PurchaseMenuState)
+        {
+            PurchaseMenuHandle();
+        }
+        else if (state is CustomerInfoMenuState)
+        {
+            CustomerInfoMenuHandle(state);
+        }
+    }
+
+    private void PurchaseMenuHandle()
     {
         DisplayProductsAndFunds();
         App.ClearAllOptions();
@@ -32,6 +44,14 @@ public class LoggedInState : LoginState
         PrintMessageWithPadding(CurrentCustomer.Username + " logged out.");
         CurrentCustomer = null;
         CurrentChoice = 1;
-        App.LoginState = App.LoginStates["LoggedOut"];
+        LoginState = App.LoginStates["LoggedOut"];
+    }
+    
+    private void CustomerInfoMenuHandle(State state)
+    {
+        App.SetOptions(state.Options);
+        AmountOfOptions = 3;
+        Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
+        App.PrintOptions();
     }
 }

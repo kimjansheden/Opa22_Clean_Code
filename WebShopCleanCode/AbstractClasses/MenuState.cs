@@ -4,38 +4,37 @@ namespace WebShopCleanCode.AbstractClasses;
 
 public abstract class MenuState : State
 {
-    private List<string> _options;
-    private string _loginState;
+    private string _loginStateStringString;
     private Dictionary<int, Action> _optionActions;
 
-    protected Dictionary<int, Action> OptionActions
+    protected virtual Dictionary<int, Action> OptionActions
     {
         get => _optionActions;
-        init => _optionActions = value;
+        set => _optionActions = value;
     }
 
-    protected string LoginState
+    protected virtual string LoginStateString
     {
-        get => _loginState;
-        private set => _loginState = value;
+        get => _loginStateStringString;
+        private set => _loginStateStringString = value;
     }
 
-    protected List<string> Options
+    public MenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        get => _options;
-        init => _options = value;
+        
     }
 
     protected internal abstract void DisplayOptions();
+    protected internal abstract void Initialize();
 
     protected internal virtual void ExecuteOption(int option)
     {
         OptionActions[option]();
     }
     
-    protected void SetLoginState()
+    protected virtual void SetLoginState()
     {
-        LoginState = App.LoginState is LoggedInState ? Strings.LogoutString : Strings.LoginString;
-        Options[Options.FindIndex(o => o == null || o == Strings.LogoutString || o == Strings.LoginString)] = LoginState;
+        LoginStateString = App.LoginState is LoggedInState ? Strings.LogoutString : Strings.LoginString;
+        Options[Options.FindIndex(o => o == null || o == Strings.LogoutString || o == Strings.LoginString)] = LoginStateString;
     }
 }

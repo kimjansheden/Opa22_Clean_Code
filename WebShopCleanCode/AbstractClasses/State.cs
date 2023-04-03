@@ -1,53 +1,69 @@
 namespace WebShopCleanCode.AbstractClasses;
 public abstract class State
 {
-    private App _app;
-    private WebShop _webShop;
+    private readonly App _app;
+    private readonly WebShop _webShop;
+    private List<string> _options;
 
-    protected App App
-    {
-        get => _app;
-        init => _app = value;
-    }
-    protected Strings Strings => App.Strings;
+    protected App App => _app;
+    protected virtual Strings Strings => App.Strings;
 
-    protected WebShop WebShop
-    {
-        get => _webShop;
-        init => _webShop = value;
-    }
+    protected WebShop WebShop => _webShop;
 
-    protected int AmountOfOptions
+    protected virtual int AmountOfOptions
     {
         get => App.AmountOfOptions;
         set => App.AmountOfOptions = value;
     }
+    protected internal virtual List<string> Options
+    {
+        get => _options;
+        set => _options = value;
+    }
 
-    protected Customer CurrentCustomer
+    protected virtual Customer CurrentCustomer
     {
         get => WebShop.CurrentCustomer;
         set => WebShop.CurrentCustomer = value;
     }
 
-    protected State CurrentState
+    protected virtual State CurrentState
     {
         get => App.CurrentState;
         set => App.CurrentState = value;
     }
-    private State PreviousState
+
+    protected virtual LoginState LoginState
+    {
+        get => App.LoginState;
+        set => App.LoginState = value;
+    }
+    private protected virtual State PreviousState
     {
         set => App.PreviousState = value;
     }
-    private List<State> StateHistory => App.StateHistory;
+    private protected virtual List<State> StateHistory => App.StateHistory;
 
-    protected Dictionary<string, MenuState> States => App.MenuStates;
+    protected virtual Dictionary<string, MenuState> States => App.MenuStates;
 
-    protected int CurrentChoice
+    protected virtual int CurrentChoice
     {
         get => App.CurrentChoice;
         set => App.CurrentChoice = value;
     }
-    protected void PrintMessageWithPadding(string message)
+
+    public State(App app, WebShop webShop)
+    {
+        _app = app;
+        _webShop = webShop;
+    }
+
+    protected State(App app)
+    {
+        _app = app;
+    }
+
+    protected virtual void PrintMessageWithPadding(string message)
     {
         Console.WriteLine();
         Console.WriteLine(message);

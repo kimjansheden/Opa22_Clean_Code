@@ -4,25 +4,9 @@ namespace WebShopCleanCode.States.MenuStates;
 
 public class SortMenuState : MenuState
 {
-    public SortMenuState(App app, WebShop webShop)
+    public SortMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        App = app;
-        WebShop = webShop;
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, NameDescending },
-            { 2, NameAscending },
-            { 3, PriceDescending },
-            { 4, PriceAscending }
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Sort.Option1,
-            ((DefaultStrings)Strings).Sort.Option2,
-            ((DefaultStrings)Strings).Sort.Option3,
-            ((DefaultStrings)Strings).Sort.Option4
-        };
-        CurrentChoice = 1;
+        
     }
     private void PriceAscending()
     {
@@ -55,6 +39,26 @@ public class SortMenuState : MenuState
         Console.WriteLine(((DefaultStrings)Strings).Sort.How);
         App.PrintOptions();
     }
+
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
+        {
+            { 1, NameDescending },
+            { 2, NameAscending },
+            { 3, PriceDescending },
+            { 4, PriceAscending }
+        };
+        Options = new List<string>
+        {
+            ((DefaultStrings)Strings).Sort.Option1,
+            ((DefaultStrings)Strings).Sort.Option2,
+            ((DefaultStrings)Strings).Sort.Option3,
+            ((DefaultStrings)Strings).Sort.Option4
+        };
+        CurrentChoice = 1;
+    }
+
     private void PrintOkGoBack()
     {
         PrintMessageWithPadding(((DefaultStrings)Strings).Sort.WaresSorted);

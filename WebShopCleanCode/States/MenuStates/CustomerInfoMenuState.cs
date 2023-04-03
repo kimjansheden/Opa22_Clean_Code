@@ -1,53 +1,32 @@
 using WebShopCleanCode.AbstractClasses;
-using WebShopCleanCode.States.LoginStates;
 
 namespace WebShopCleanCode.States.MenuStates;
 public class CustomerInfoMenuState : MenuState
 {
-    public CustomerInfoMenuState(App app, WebShop webShop)
+    public CustomerInfoMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        App = app;
-        WebShop = webShop;
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, SeeOrders },
-            { 2, SeeInfo },
-            { 3, AddFunds }
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Customer.Option1,
-            ((DefaultStrings)Strings).Customer.Option2,
-            ((DefaultStrings)Strings).Customer.Option3,
-        };
-        app.CurrentChoice = 1;
+        
     }
     private void AddFunds()
     {
-        Console.WriteLine("How many funds would you like to add?");
+        Console.WriteLine(((DefaultStrings)Strings).Customer.HowManyFunds);
         string amountString = Console.ReadLine();
         try
         {
             int amount = int.Parse(amountString);
             if (amount < 0)
             {
-                Console.WriteLine();
-                Console.WriteLine("Don't add negative amounts.");
-                Console.WriteLine();
+                PrintMessageWithPadding(((DefaultStrings)Strings).Customer.DontAddNegative);
             }
             else
             {
                 CurrentCustomer.Funds += amount;
-                Console.WriteLine();
-                Console.WriteLine(amount + " added to your profile.");
-                Console.WriteLine();
+                PrintMessageWithPadding(amount + ((DefaultStrings)Strings).Customer.Added);
             }
         }
         catch (FormatException e)
         {
-            Console.WriteLine();
-            Console.WriteLine("Please write a number next time.");
-            Console.WriteLine();
+            PrintMessageWithPadding(((DefaultStrings)Strings).Customer.PleaseWriteNum);
         }
     }
 
@@ -63,18 +42,23 @@ public class CustomerInfoMenuState : MenuState
 
     protected internal override void DisplayOptions()
     {
-        if (App.LoginState is LoggedOutState)
+        LoginState.RequestHandle(this);
+    }
+
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
         {
-            PrintMessageWithPadding(((DefaultStrings)Strings).Login.NobodyLoggedIn);
-            App.Commands["back"].Execute();
-            App.DisplayOptions();
-        }
-        else if (App.LoginState is LoggedInState)
+            { 1, SeeOrders },
+            { 2, SeeInfo },
+            { 3, AddFunds }
+        };
+        Options = new List<string>
         {
-            App.SetOptions(Options);
-            AmountOfOptions = 3;
-            Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
-            App.PrintOptions();
-        }
+            ((DefaultStrings)Strings).Customer.Option1,
+            ((DefaultStrings)Strings).Customer.Option2,
+            ((DefaultStrings)Strings).Customer.Option3,
+        };
+        CurrentChoice = 1;
     }
 }

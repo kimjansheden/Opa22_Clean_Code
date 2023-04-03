@@ -4,28 +4,14 @@ namespace WebShopCleanCode.States.MenuStates;
 
 public class MainMenuState : MenuState
 {
-    public MainMenuState(App app, WebShop webShop)
+    public MainMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        App = app;
-        WebShop = webShop;
-        OptionActions = new Dictionary<int, Action>
-        {
-            { 1, ShowWaresMenu },
-            { 2, ShowCustomerInfo },
-            { 3, LoginOrLogout }
-        };
-        Options = new List<string>
-        {
-            ((DefaultStrings)Strings).Main.Option1,
-            ((DefaultStrings)Strings).Main.Option2,
-            LoginState
-        };
-        app.CurrentChoice = 1;
+        
     }
 
     private void LoginOrLogout()
     {
-        ((LoginState)App.LoginState).LoginLogoutHandle();
+        LoginState.LoginLogoutHandle();
     }
 
     private void ShowCustomerInfo()
@@ -40,6 +26,23 @@ public class MainMenuState : MenuState
         AmountOfOptions = 3;
         Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
         App.PrintOptions();
+    }
+
+    protected internal override void Initialize()
+    {
+        OptionActions = new Dictionary<int, Action>
+        {
+            { 1, ShowWaresMenu },
+            { 2, ShowCustomerInfo },
+            { 3, LoginOrLogout }
+        };
+        Options = new List<string>
+        {
+            ((DefaultStrings)Strings).Main.Option1,
+            ((DefaultStrings)Strings).Main.Option2,
+            LoginStateString
+        };
+        CurrentChoice = 1;
     }
 
     private void ShowWaresMenu()
