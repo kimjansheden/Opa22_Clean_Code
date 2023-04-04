@@ -49,8 +49,6 @@ public class App : IMenu
         set => _amountOfOptions = value;
     }
 
-    private List<string> Options => _options;
-
     private Customer CurrentCustomer
     {
         get => _webShop.CurrentCustomer;
@@ -92,12 +90,6 @@ public class App : IMenu
     {
         get => _loginState;
         set => _loginState = value;
-    }
-
-    public Dictionary<string, IMenuStateFactory> StateFactories
-    {
-        get => _stateFactories;
-        set => _stateFactories = value;
     }
 
     /// <summary>
@@ -173,33 +165,33 @@ public class App : IMenu
 
     private void CreateDefaultOptions()
     {
-        _options.Add(((DefaultStrings)Strings).Main.Option1);
-        _options.Add(((DefaultStrings)Strings).Main.Option2);
-        _options.Add(((DefaultStrings)Strings).Main.Option3);
-        _options.Add(((DefaultStrings)Strings).Main.Option4);
+        _options.Add(((DefaultStrings)_strings).Main.Option1);
+        _options.Add(((DefaultStrings)_strings).Main.Option2);
+        _options.Add(((DefaultStrings)_strings).Main.Option3);
+        _options.Add(((DefaultStrings)_strings).Main.Option4);
     }
 
     private void CreateDefaultCommands()
     {
-        _quitCommands = ((DefaultStrings)Strings).Quit;
+        _quitCommands = ((DefaultStrings)_strings).Quit;
 
-        Commands.Add("left", new LeftCommand(this));
-        Commands.Add("l", new LeftCommand(this));
+        _commands.Add("left", new LeftCommand(this));
+        _commands.Add("l", new LeftCommand(this));
 
-        Commands.Add("right", new RightCommand(this));
-        Commands.Add("r", new RightCommand(this));
+        _commands.Add("right", new RightCommand(this));
+        _commands.Add("r", new RightCommand(this));
 
-        Commands.Add("ok", new OkCommand(this));
-        Commands.Add("o", new OkCommand(this));
-        Commands.Add("k", new OkCommand(this));
+        _commands.Add("ok", new OkCommand(this));
+        _commands.Add("o", new OkCommand(this));
+        _commands.Add("k", new OkCommand(this));
 
         foreach (var quitCommand in _quitCommands)
         {
-            Commands.Add(quitCommand, new QuitCommand(this));
+            _commands.Add(quitCommand, new QuitCommand(this));
         }
 
-        Commands.Add("back", new BackCommand(this));
-        Commands.Add("b", new BackCommand(this));
+        _commands.Add("back", new BackCommand(this));
+        _commands.Add("b", new BackCommand(this));
     }
 
     /// <summary>
@@ -215,42 +207,41 @@ public class App : IMenu
             _webShop.Customers.Add(newCustomer);
             _webShop.CurrentCustomer = newCustomer;
             _loginState = _loginStates["LoggedIn"];
-            Options[2] = ((DefaultStrings)Strings).LogoutString;
+            _options[2] = ((DefaultStrings)_strings).LogoutString;
         }
     }
     
     private void CreateWebShop(bool defaultConstructor)
     {
-        AmountOfOptions = defaultConstructor ? 3 : _options.Count;
+        _amountOfOptions = defaultConstructor ? 3 : _options.Count;
         CurrentCustomer = _webShop.CurrentCustomer;
-        CurrentChoice = 1;
+        _currentChoice = 1;
         _stateHistory = new List<State>();
     }
 
     public void Run()
     {
         Console.WriteLine(_strings.MainMenuWelcome);
-        string input = "";
-        
+
         while (_currentCommand is not QuitCommand)
         {
             DisplayOptions();
             PrintNavigation();
 
-            input = Console.ReadLine();
-            ExecuteCommandIfExists(input);
+            var input = Console.ReadLine();
+            ExecuteCommandIfExists(input!);
         }
     }
 
     public void DisplayOptions()
     {
-        if (CurrentState is MenuState menuState) menuState.DisplayOptions();
+        if (_currentState is MenuState menuState) menuState.DisplayOptions();
     }
 
     public void PrintOptions()
     {
         var optionNum = 1;
-        foreach (string option in Options)
+        foreach (string option in _options)
         {
             if(!string.IsNullOrEmpty(option))
                 Console.WriteLine(optionNum++ + ": " + option);
@@ -263,32 +254,32 @@ public class App : IMenu
 
     private void PrintNavigation()
     {
-        for (int i = 0; i < AmountOfOptions; i++)
+        for (int i = 0; i < _amountOfOptions; i++)
         {
             Console.Write(i + 1 + "\t");
         }
         Console.WriteLine();
-        for (int i = 1; i < CurrentChoice; i++)
+        for (int i = 1; i < _currentChoice; i++)
         {
             Console.Write("\t");
         }
         Console.WriteLine("|");
 
-        Console.WriteLine("Your buttons are Left, Right, OK, Back and Quit.");
+        Console.WriteLine(_strings.Buttons);
         DisplayUser(CurrentCustomer);
     }
     private void DisplayUser(Customer customer) => Console.WriteLine(customer != null ? $"Current user: {customer.Username}" : "Nobody logged in.");
 
     private void ExecuteCommandIfExists(string input)
     {
-        if (Commands.ContainsKey(input))
+        if (_commands.ContainsKey(input))
         {
-            Commands[input].Execute();
-            _currentCommand = Commands[input];
+            _commands[input].Execute();
+            _currentCommand = _commands[input];
         }
         else
         {
-            Console.WriteLine("That is not an applicable option.");
+            Console.WriteLine(_strings.NotApplicable);
         }
     }
 
