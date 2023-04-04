@@ -24,7 +24,7 @@ namespace WebShopCleanCode
                     {
                         if (ascending)
                         {
-                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) < 0)
+                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) > 0)
                             {
                                 Product temp = Products[j];
                                 Products[j] = Products[j + 1];
@@ -34,7 +34,7 @@ namespace WebShopCleanCode
                         }
                         else
                         {
-                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) > 0)
+                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) < 0)
                             {
                                 Product temp = Products[j];
                                 Products[j] = Products[j + 1];
