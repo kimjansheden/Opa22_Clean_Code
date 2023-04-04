@@ -1,4 +1,6 @@
 ﻿using WebShopCleanCode.AbstractClasses;
+using WebShopCleanCode.Enums;
+
 namespace WebShopCleanCode
 {
     public class DefaultWebShop : WebShop
@@ -8,11 +10,11 @@ namespace WebShopCleanCode
         /// <summary>
         /// Bubble Sort.
         /// </summary>
-        /// <param name="variable"></param>
+        /// <param name="sortBy"></param>
         /// <param name="ascending"></param>
-        public override void Sort(string variable, bool ascending)
+        public override void Sort(Enum sortBy, bool ascending)
         {
-            if (variable.Equals("name")) {
+            if (sortBy.Equals(SortBy.Name)) {
                 int length = Products.Count;
                 for(int i = 0; i < length - 1; i++)
                 {
@@ -22,7 +24,7 @@ namespace WebShopCleanCode
                     {
                         if (ascending)
                         {
-                            if (Products[j].Name.CompareTo(Products[j + 1].Name) < 0)
+                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) < 0)
                             {
                                 Product temp = Products[j];
                                 Products[j] = Products[j + 1];
@@ -32,7 +34,7 @@ namespace WebShopCleanCode
                         }
                         else
                         {
-                            if (Products[j].Name.CompareTo(Products[j + 1].Name) > 0)
+                            if (String.Compare(Products[j].Name, Products[j + 1].Name, StringComparison.Ordinal) > 0)
                             {
                                 Product temp = Products[j];
                                 Products[j] = Products[j + 1];
@@ -41,13 +43,13 @@ namespace WebShopCleanCode
                             }
                         }
                     }
-                    if (sorted == true)
+                    if (sorted)
                     {
                         break;
                     }
                 }
             }
-            else if (variable.Equals("price"))
+            else if (sortBy.Equals(SortBy.Price))
             {
                 int length = Products.Count;
                 for (int i = 0; i < length - 1; i++)
@@ -77,7 +79,7 @@ namespace WebShopCleanCode
                             }
                         }
                     }
-                    if (sorted == true)
+                    if (sorted)
                     {
                         break;
                     }

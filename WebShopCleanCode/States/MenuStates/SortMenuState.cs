@@ -1,17 +1,21 @@
 using WebShopCleanCode.AbstractClasses;
+using WebShopCleanCode.Enums;
 
 namespace WebShopCleanCode.States.MenuStates;
 
 public class SortMenuState : MenuState
 {
+    private bool _ascending;
+    private bool _descending;
     protected override string DisplayMessage => ((DefaultStrings)Strings).Sort.How;
 
     public SortMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        
     }
     protected internal override void Initialize()
     {
+        _ascending = true;
+        _descending = false;
         OptionActions = new Dictionary<int, Action>
         {
             { 1, NameDescending },
@@ -30,25 +34,25 @@ public class SortMenuState : MenuState
     }
     private void PriceAscending()
     {
-        WebShop.Sort("price", true);
+        WebShop.Sort(SortBy.Price, _ascending);
         PrintOkGoBack();
     }
 
     private void PriceDescending()
     {
-        WebShop.Sort("price", false);
+        WebShop.Sort(SortBy.Price, _descending);
         PrintOkGoBack();
     }
 
     private void NameAscending()
     {
-        WebShop.Sort("name", true);
+        WebShop.Sort(SortBy.Name, _ascending);
         PrintOkGoBack();
     }
 
     private void NameDescending()
     {
-        WebShop.Sort("name", false);
+        WebShop.Sort(SortBy.Name, _descending);
         PrintOkGoBack();
     }
 

@@ -52,7 +52,7 @@ public abstract class State
         set => App.CurrentChoice = value;
     }
 
-    public State(App app, WebShop webShop)
+    protected State(App app, WebShop webShop)
     {
         _app = app;
         _webShop = webShop;
