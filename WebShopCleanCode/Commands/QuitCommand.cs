@@ -10,6 +10,6 @@ public class QuitCommand : ICommand
     }
     public void Execute()
     {
-        Console.WriteLine("The console powers down. You are free to leave.");
+        Console.WriteLine(_app.Strings.PowerDown);
     }
 }

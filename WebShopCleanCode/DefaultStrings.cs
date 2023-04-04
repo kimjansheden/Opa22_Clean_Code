@@ -88,7 +88,6 @@ public class DefaultStrings : Strings
         public string MustBeLoggedIn => "You must be logged in to purchase wares.";
         public string YOrN => "y or n, please.";
     }
-
     
     public string[] Quit => new[] { "quit", "q" };
     public string MenuWhat => "What would you like to do?";
