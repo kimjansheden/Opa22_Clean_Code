@@ -14,19 +14,29 @@ public class App : IMenu
     private Dictionary<string, IMenuStateFactory> _stateFactories;
     
     private List<string> _options;
+    private string _username;
+    private string _password;
     private string[] _quitCommands;
     private readonly WebShop _webShop;
-    private readonly IWebShopFactory _webShopFactory;
     private Strings _strings;
     private int _currentChoice;
     private int _amountOfOptions;
-    public string Username = null;
-    public string Password = null;
     private ICommand _currentCommand;
     private LoginState _loginState;
-    private State _previousState;
     private State _currentState;
     private List<State> _stateHistory;
+
+    public string Username
+    {
+        get => _username;
+        set => _username = value;
+    }
+
+    public string Password
+    {
+        get => _password;
+        set => _password = value;
+    }
     public int CurrentChoice
     {
         get => _currentChoice;
@@ -39,11 +49,7 @@ public class App : IMenu
         set => _amountOfOptions = value;
     }
 
-    private List<string> Options
-    {
-        get => _options;
-        set => _options = value;
-    }
+    private List<string> Options => _options;
 
     private Customer CurrentCustomer
     {
@@ -57,22 +63,10 @@ public class App : IMenu
         set => _strings = value;
     }
 
-    private ICommand CurrentCommand
-    {
-        get => _currentCommand;
-        set => _currentCommand = value;
-    }
-
     public State CurrentState
     {
         get => _currentState;
         set => _currentState = value;
-    }
-
-    public State PreviousState
-    {
-        get => _previousState;
-        set => _previousState = value;
     }
 
     public Dictionary<string, ICommand> Commands => _commands;
@@ -121,7 +115,6 @@ public class App : IMenu
     /// <param name="menuStateFactories"></param>
     public App(IWebShopFactory webShopFactory, Strings strings, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startState, LoginState startLoginState, Dictionary<string, MenuState> menuStates, Dictionary<string, LoginState> loginStates, Dictionary<string, IMenuStateFactory> menuStateFactories)
     {
-        _webShopFactory = webShopFactory;
         _webShop = webShopFactory.CreateWebShop();
         _strings = strings;
         _commands = commands;
@@ -140,8 +133,8 @@ public class App : IMenu
     /// </summary>
     public App()
     {
-        _webShopFactory = new DefaultWebShopFactory();
-        _webShop = _webShopFactory.CreateWebShop();
+        IWebShopFactory webShopFactory = new DefaultWebShopFactory();
+        _webShop = webShopFactory.CreateWebShop();
         _strings = new DefaultStrings();
         _commands = new Dictionary<string, ICommand>();
         _options = new List<string>();
@@ -239,7 +232,6 @@ public class App : IMenu
         AmountOfOptions = defaultConstructor ? 3 : _options.Count;
         CurrentCustomer = _webShop.CurrentCustomer;
         CurrentChoice = 1;
-        PreviousState = _currentState;
         _stateHistory = new List<State>();
     }
 
@@ -248,7 +240,7 @@ public class App : IMenu
         Console.WriteLine(_strings.MainMenuWelcome);
         string input = "";
         
-        while (CurrentCommand is not QuitCommand)
+        while (_currentCommand is not QuitCommand)
         {
             DisplayOptions();
             PrintNavigation();
@@ -300,7 +292,7 @@ public class App : IMenu
         if (Commands.ContainsKey(input))
         {
             Commands[input].Execute();
-            CurrentCommand = Commands[input];
+            _currentCommand = Commands[input];
         }
         else
         {

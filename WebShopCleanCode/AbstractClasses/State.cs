@@ -40,10 +40,7 @@ public abstract class State
         get => App.LoginState;
         set => App.LoginState = value;
     }
-    private protected virtual State PreviousState
-    {
-        set => App.PreviousState = value;
-    }
+    
     private protected virtual List<State> StateHistory => App.StateHistory;
 
     protected virtual Dictionary<string, MenuState> States => App.MenuStates;
@@ -73,7 +70,6 @@ public abstract class State
     }
     protected virtual void ChangeState(string state)
     {
-        if (CurrentState is MenuState) PreviousState = CurrentState;
         if (CurrentState is MenuState) StateHistory.Add(CurrentState);
         CurrentState = States[state];
         CurrentChoice = 1;
