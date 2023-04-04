@@ -11,6 +11,5 @@ public abstract class LoginState : State
 
     protected LoginState(App app) : base(app)
     {
-        
     }
 }

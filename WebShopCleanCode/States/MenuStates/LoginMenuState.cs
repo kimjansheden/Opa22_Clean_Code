@@ -8,7 +8,6 @@ public class LoginMenuState : MenuState
     private readonly CustomerBuilder _customerBuilder;
     public LoginMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        // I decided to use the Builder Design Pattern here to separate the construction of the Customer from the interaction with the user.
         _customerBuilder = new CustomerBuilder();
     }
     protected internal override void Initialize()

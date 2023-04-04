@@ -154,7 +154,6 @@ public class App : IMenu
 
     private void CreateDefaultStates()
     {
-        // In order to avoid calling a virtual member in the constructor, I have implemented the Factory Method Design Pattern.
         _stateFactories = new Dictionary<string, IMenuStateFactory>();
         _stateFactories.Add("CustomerMenu", new CustomerInfoMenuMenuStateFactory());
         _stateFactories.Add("LoginMenu", new LoginMenuStateFactory());

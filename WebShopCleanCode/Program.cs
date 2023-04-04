@@ -4,7 +4,6 @@
     {
         public static void Main(string[] args)
         {
-            // WebShopMenu webShopMenu = new WebShopMenu();
             App app = new App(loggedInCustomer: true);
             app.Run();
             

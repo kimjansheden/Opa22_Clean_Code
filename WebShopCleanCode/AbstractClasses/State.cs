@@ -1,4 +1,6 @@
 namespace WebShopCleanCode.AbstractClasses;
+
+// I decided to go with the State Design Pattern in order to give the menus a dynamic behavior that also answers to whether the customer is logged in or not. The State Pattern together with the Command Pattern helped me get rid of the switch cases and if statements that the old code used to navigate in the menu and perform actions.
 public abstract class State
 {
     private readonly App _app;
