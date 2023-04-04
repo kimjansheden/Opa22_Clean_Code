@@ -4,6 +4,8 @@ namespace WebShopCleanCode.States.MenuStates;
 
 public class SortMenuState : MenuState
 {
+    protected override string DisplayMessage => ((DefaultStrings)Strings).Sort.How;
+
     public SortMenuState(App app, WebShop webShop) : base(app, webShop)
     {
         
@@ -25,14 +27,6 @@ public class SortMenuState : MenuState
             ((DefaultStrings)Strings).Sort.Option4
         };
         CurrentChoice = 1;
-    }
-    
-    protected internal override void DisplayOptions()
-    {
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).Sort.How);
-        App.PrintOptions();
     }
     private void PriceAscending()
     {

@@ -4,6 +4,7 @@ namespace WebShopCleanCode.States.MenuStates;
 
 public class LoginMenuState : MenuState
 {
+    protected override string DisplayMessage => ((DefaultStrings)Strings).Login.Menu;
     private readonly CustomerBuilder _customerBuilder;
     public LoginMenuState(App app, WebShop webShop) : base(app, webShop)
     {
@@ -27,13 +28,6 @@ public class LoginMenuState : MenuState
             ((DefaultStrings)Strings).Login.Option4
         };
         CurrentChoice = 1;
-    }
-    protected internal override void DisplayOptions()
-    {
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).Login.Menu);
-        App.PrintOptions();
     }
 
     protected override void ChangeState(string state)

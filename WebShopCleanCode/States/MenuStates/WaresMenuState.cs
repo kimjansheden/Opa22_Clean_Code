@@ -3,6 +3,8 @@ using WebShopCleanCode.AbstractClasses;
 namespace WebShopCleanCode.States.MenuStates;
 public class WaresMenuState : MenuState
 {
+    protected override string DisplayMessage => ((DefaultStrings)Strings).MenuWhat;
+
     public WaresMenuState(App app, WebShop webShop) : base(app, webShop)
     {
         
@@ -30,10 +32,7 @@ public class WaresMenuState : MenuState
     protected internal override void DisplayOptions()
     {
         SetLoginState();
-        App.SetOptions(Options);
-        AmountOfOptions = 4;
-        Console.WriteLine(((DefaultStrings)Strings).MenuWhat);
-        App.PrintOptions();
+        base.DisplayOptions();
     }
 
     private void LoginOrLogout()

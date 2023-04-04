@@ -4,7 +4,8 @@ namespace WebShopCleanCode.AbstractClasses;
 
 public abstract class MenuState : State
 {
-    private string _loginStateStringString;
+    private string _loginStateString;
+    private string _displayMessage;
     private Dictionary<int, Action> _optionActions;
 
     protected virtual Dictionary<int, Action> OptionActions
@@ -15,16 +16,24 @@ public abstract class MenuState : State
 
     protected virtual string LoginStateString
     {
-        get => _loginStateStringString;
-        private set => _loginStateStringString = value;
+        get => _loginStateString;
+        private set => _loginStateString = value;
     }
+
+    protected virtual string DisplayMessage => _displayMessage;
 
     public MenuState(App app, WebShop webShop) : base(app, webShop)
     {
         
     }
 
-    protected internal abstract void DisplayOptions();
+    protected internal virtual void DisplayOptions()
+    {
+        App.SetOptions(Options);
+        AmountOfOptions = Options.Count;
+        Console.WriteLine(DisplayMessage);
+        App.PrintOptions();
+    }
     protected internal abstract void Initialize();
 
     protected internal virtual void ExecuteOption(int option)
