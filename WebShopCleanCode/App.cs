@@ -13,7 +13,7 @@ public class App : IMenu
     private Dictionary<string, LoginState> _loginStates;
     private Dictionary<string, IMenuStateFactory> _stateFactories;
     
-    private List<string> _options;
+    private readonly List<string> _options;
     private string _username;
     private string _password;
     private string[] _quitCommands;
@@ -210,16 +210,8 @@ public class App : IMenu
     {
         if (loggedInCustomer)
         {
-            Customer newCustomer = new Customer(
-                username: "Test",
-                password: "Test",
-                firstName: null,
-                lastName: null,
-                email: null,
-                age: -1,
-                address: null,
-                phoneNumber: null);
-            
+            CustomerBuilder customerBuilder = new CustomerBuilder();
+            Customer newCustomer = customerBuilder.SetUsername("Test").SetPassword("Test").Build();
             _webShop.Customers.Add(newCustomer);
             _webShop.CurrentCustomer = newCustomer;
             _loginState = _loginStates["LoggedIn"];

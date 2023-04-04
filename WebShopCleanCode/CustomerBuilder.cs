@@ -15,6 +15,13 @@ public class CustomerBuilder
     public CustomerBuilder()
     {
         _age = -1;
+        _username = null;
+        _password = null;
+        _firstName = null;
+        _lastName = null;
+        _email = null;
+        _address = null;
+        _phoneNumber = null;
     }
 
     public CustomerBuilder SetUsername(string username)
