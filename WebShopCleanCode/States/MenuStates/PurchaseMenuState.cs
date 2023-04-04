@@ -1,16 +1,19 @@
 using WebShopCleanCode.AbstractClasses;
+using WebShopCleanCode.Helpers;
+using WebShopCleanCode.Interfaces;
 
 namespace WebShopCleanCode.States.MenuStates;
 
 public class PurchaseMenuState : MenuState
 {
+    private IPurchaseHelper _purchaseHelper = null!; 
     public PurchaseMenuState(App app, WebShop webShop) : base(app, webShop)
     {
     }
     
     protected internal override void Initialize()
     {
-        
+        _purchaseHelper = new PurchaseHelper(Strings);
     }
 
     protected internal override void DisplayOptions()
@@ -22,33 +25,6 @@ public class PurchaseMenuState : MenuState
     {
         int index = CurrentChoice - 1;
         Product product = WebShop.Products[index];
-        if (product.InStock())
-        {
-            AttemptPurchase(product);
-        }
-        else
-        {
-            PrintMessageWithPadding(((DefaultStrings)Strings).Purchase.NotInStock);
-        }
-    }
-
-    private void AttemptPurchase(Product product)
-    {
-        if (CurrentCustomer.CanAfford(product.Price))
-        {
-            CompletePurchase(product);
-        }
-        else
-        {
-            PrintMessageWithPadding(((DefaultStrings)Strings).Purchase.CannotAfford);
-        }
-    }
-
-    private void CompletePurchase(Product product)
-    {
-        CurrentCustomer.Funds -= product.Price;
-        product.NrInStock--;
-        CurrentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
-        PrintMessageWithPadding(((DefaultStrings)Strings).Purchase.Success + product.Name);
+        _purchaseHelper.AttemptPurchase(product, CurrentCustomer, PrintMessageWithPadding);
     }
 }

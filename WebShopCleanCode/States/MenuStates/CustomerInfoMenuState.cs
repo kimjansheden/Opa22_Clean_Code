@@ -42,17 +42,23 @@ public class CustomerInfoMenuState : MenuState
             {
                 CurrentCustomer.Funds += amount;
                 PrintMessageWithPadding(amount + ((DefaultStrings)Strings).Customer.Added);
+                CurrentChoice = 1;
             }
         }
         catch (FormatException e)
         {
             PrintMessageWithPadding(((DefaultStrings)Strings).Customer.PleaseWriteNum);
         }
+        catch (OverflowException e)
+        {
+            PrintMessageWithPadding(((DefaultStrings)Strings).Customer.NumTooHigh);
+        }
     }
 
     private void SeeInfo()
     {
         CurrentCustomer.PrintInfo();
+        CurrentChoice = 1;
     }
 
     private void SeeOrders()

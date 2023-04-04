@@ -44,6 +44,7 @@ public class DefaultStrings : Strings
         public string DontAddNegative => "Don't add negative amounts.";
         public string Added => " added to your profile.";
         public string PleaseWriteNum => "Please write a number next time.";
+        public string NumTooHigh => "The number was too high. Please try a lower number.";
         public string HowManyFunds => "How many funds would you like to add?";
     }
 
