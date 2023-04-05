@@ -36,12 +36,12 @@ public class LoggedInState : LoginState
         {
             Console.WriteLine(i + 1 + ": " + WebShop.Products[i].Name + ", " + WebShop.Products[i].Price + "kr");
         }
-        Console.WriteLine("Your funds: " + CurrentCustomer.Funds);
+        Console.WriteLine("Your funds: " + CurrentCustomer.Info.GetInfo<int>("Funds"));
     }
 
     protected internal override void LoginLogoutHandle()
     {
-        PrintMessageWithPadding(CurrentCustomer.Username + " logged out.");
+        PrintMessageWithPadding(CurrentCustomer.Info.GetInfo<string>("Username") + " logged out.");
         CurrentCustomer = null;
         CurrentChoice = 1;
         LoginState = App.LoginStates["LoggedOut"];

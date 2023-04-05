@@ -28,5 +28,5 @@ public class MenuManager : IMenuManager
         DisplayUser(_app.CurrentCustomer);
     }
 
-    private void DisplayUser(Customer customer) => Console.WriteLine(customer != null ? $"Current user: {customer.Username}" : "Nobody logged in.");
+    private void DisplayUser(Customer customer) => Console.WriteLine(customer != null ? $"Current user: {customer.Info.GetInfo<string>("Username")}" : "Nobody logged in.");
 }

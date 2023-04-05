@@ -5,8 +5,10 @@
         // We just pretend this accesses a real database.
         private List<Product> productsInDatabase;
         private List<Customer> customersInDatabase;
+        private CustomerBuilder _customerBuilder;
         public Database()
         {
+            _customerBuilder = new CustomerBuilder();
             productsInDatabase = new List<Product>();
             productsInDatabase.Add(new Product("Mirror", 300, 2));
             productsInDatabase.Add(new Product("Car", 2000000, 2));
@@ -19,8 +21,8 @@
             productsInDatabase.Add(new Product("Bed", 20000, 2));
 
             customersInDatabase = new List<Customer>();
-            customersInDatabase.Add(new Customer("jimmy", "jimisthebest", "Jimmy", "Jamesson", "jj@mail.com", 22, "Big Street 5", "123456789"));
-            customersInDatabase.Add(new Customer("jake", "jake123", "Jake", null, null, 0, null, null));
+            customersInDatabase.Add(_customerBuilder.SetUsername("jimmy").SetPassword("jimisthebest").SetFirstName("Jimmy").SetLastName("Jamesson").SetEmail("jj@mail.com").SetAge(22).SetAddress("Big Street 5").SetPhoneNumber("123456789").Build());
+            customersInDatabase.Add(_customerBuilder.SetUsername("jake").SetPassword("jake123").SetFirstName("Jake").Build());
         }
 
         public List<Product> GetProducts()

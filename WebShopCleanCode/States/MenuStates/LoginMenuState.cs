@@ -46,7 +46,7 @@ public class LoginMenuState : MenuState
         WebShop.Customers.Add(newCustomer);
         CurrentCustomer = newCustomer;
         LoginState = App.LoginStates["LoggedIn"];
-        PrintMessageWithPadding(newCustomer.Username + " successfully added and is now logged in.");
+        PrintMessageWithPadding(newCustomer.Info.GetInfo<string>("Username") + " successfully added and is now logged in.");
         ChangeState("MainMenu");
     }
 
@@ -109,7 +109,7 @@ public class LoginMenuState : MenuState
     {
         foreach (Customer customer in WebShop.Customers)
         {
-            if (customer.Username.Equals(App.Username))
+            if (customer.Info.GetInfo<string>("Username").Equals(App.Username))
             {
                 PrintMessageWithPadding(((DefaultStrings)Strings).Login.UsernameExists);
                 break;
@@ -128,9 +128,9 @@ public class LoginMenuState : MenuState
             bool found = false;
             foreach (Customer customer in WebShop.Customers)
             {
-                if (App.Username.Equals(customer.Username) && customer.CheckPassword(App.Password))
+                if (App.Username.Equals(customer.Info.GetInfo<string>("Username")) && customer.CheckPassword(App.Password))
                 {
-                    PrintMessageWithPadding(customer.Username + " logged in.");
+                    PrintMessageWithPadding(customer.Info.GetInfo<string>("Username") + " logged in.");
                     CurrentCustomer = customer;
                     found = true;
                     ChangeState("MainMenu");

@@ -33,7 +33,9 @@ public class PurchaseHelper : IPurchaseHelper
     
     private void CompletePurchase(Product product, Customer currentCustomer)
     {
-        currentCustomer.Funds -= product.Price;
+        var currentFunds = currentCustomer.Info.GetInfo<int>("Funds");
+        var newFunds = currentFunds - product.Price;
+        currentCustomer.Info.SetInfo<int>("Funds", newFunds);
         product.NrInStock--;
         currentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
     }

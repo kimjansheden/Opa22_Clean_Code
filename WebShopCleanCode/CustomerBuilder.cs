@@ -1,3 +1,6 @@
+using WebShopCleanCode.Helpers;
+using WebShopCleanCode.Interfaces;
+
 namespace WebShopCleanCode;
 
 // I decided to use the Builder Design Pattern here to separate the construction of the Customer from the interaction with the user.
@@ -74,6 +77,17 @@ public class CustomerBuilder
 
     public Customer Build()
     {
-        return new Customer(_username, _password, _firstName, _lastName, _email, _age, _address, _phoneNumber);
+        ICustomerInfo info = new CustomerInfo
+        (
+            _username,
+            _password,
+            _firstName,
+            _lastName,
+            _email,
+            _age,
+            _address,
+            _phoneNumber
+        );
+        return new Customer(info);
     }
 }

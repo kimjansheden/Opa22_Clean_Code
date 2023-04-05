@@ -40,7 +40,9 @@ public class CustomerInfoMenuState : MenuState
             }
             else
             {
-                CurrentCustomer.Funds += amount;
+                var currentFunds = CurrentCustomer.Info.GetInfo<int>("Funds");
+                var newFunds = currentFunds + amount;
+                CurrentCustomer.Info.SetInfo<int>("Funds", newFunds);
                 PrintMessageWithPadding(amount + ((DefaultStrings)Strings).Customer.Added);
                 CurrentChoice = 1;
             }
