@@ -1,19 +1,20 @@
 using WebShopCleanCode.AbstractClasses;
 using WebShopCleanCode.Commands;
 using WebShopCleanCode.Factories;
+using WebShopCleanCode.Helpers;
 using WebShopCleanCode.Interfaces;
 using WebShopCleanCode.States.LoginStates;
 
 namespace WebShopCleanCode;
 
-public class App : IMenu
+public class App : IApp
 {
-    private readonly Dictionary<string, ICommand> _commands;
+    private Dictionary<string, ICommand> _commands;
     private Dictionary<string, MenuState> _menuStates;
     private Dictionary<string, LoginState> _loginStates;
     private Dictionary<string, IMenuStateFactory> _stateFactories;
     
-    private readonly List<string> _options;
+    private List<string> _options;
     private string _username;
     private string _password;
     private string[] _quitCommands;
@@ -25,6 +26,9 @@ public class App : IMenu
     private LoginState _loginState;
     private State _currentState;
     private List<State> _stateHistory;
+    private readonly IMenuManager _menuManager;
+    private readonly ICommandExecutor _commandExecutor;
+    private readonly IOptionsManager _optionsManager;
 
     public string Username
     {
@@ -49,7 +53,7 @@ public class App : IMenu
         set => _amountOfOptions = value;
     }
 
-    private Customer CurrentCustomer
+    public Customer CurrentCustomer
     {
         get => _webShop.CurrentCustomer;
         set => _webShop.CurrentCustomer = value;
@@ -67,7 +71,11 @@ public class App : IMenu
         set => _currentState = value;
     }
 
-    public Dictionary<string, ICommand> Commands => _commands;
+    public Dictionary<string, ICommand> Commands
+    {
+        get => _commands;
+        set => _commands = value;
+    }
 
     public Dictionary<string, MenuState> MenuStates
     {
@@ -92,10 +100,24 @@ public class App : IMenu
         set => _loginState = value;
     }
 
+    public List<string> Options
+    {
+        get => _options;
+        set => _options = value;
+    }
+
+    public ICommand CurrentCommand
+    {
+        get => _currentCommand;
+        set => _currentCommand = value;
+    }
+
     /// <summary>
     /// Custom constructor.
     /// </summary>
     /// <param name="webShopFactory"></param>
+    /// <param name="optionsManager"></param>
+    /// <param name="commandExecutor"></param>
     /// <param name="strings"></param>
     /// <param name="commands"></param>
     /// <param name="options"></param>
@@ -105,9 +127,13 @@ public class App : IMenu
     /// <param name="menuStates"></param>
     /// <param name="loginStates"></param>
     /// <param name="menuStateFactories"></param>
-    public App(IWebShopFactory webShopFactory, Strings strings, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startState, LoginState startLoginState, Dictionary<string, MenuState> menuStates, Dictionary<string, LoginState> loginStates, Dictionary<string, IMenuStateFactory> menuStateFactories)
+    /// <param name="menuManager"></param>
+    public App(IWebShopFactory webShopFactory, IMenuManager menuManager, IOptionsManager optionsManager, ICommandExecutor commandExecutor, Strings strings, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startState, LoginState startLoginState, Dictionary<string, MenuState> menuStates, Dictionary<string, LoginState> loginStates, Dictionary<string, IMenuStateFactory> menuStateFactories)
     {
         _webShop = webShopFactory.CreateWebShop();
+        _menuManager = menuManager;
+        _optionsManager = optionsManager;
+        _commandExecutor = commandExecutor;
         _strings = strings;
         _commands = commands;
         _options = options;
@@ -126,6 +152,9 @@ public class App : IMenu
     public App()
     {
         IWebShopFactory webShopFactory = new DefaultWebShopFactory();
+        _menuManager = new MenuManager(this);
+        _optionsManager = new OptionsManager(this);
+        _commandExecutor = new CommandExecutor(this);
         _webShop = webShopFactory.CreateWebShop();
         _strings = new DefaultStrings();
         _commands = new Dictionary<string, ICommand>();
@@ -226,73 +255,29 @@ public class App : IMenu
         while (_currentCommand is not QuitCommand)
         {
             DisplayOptions();
-            PrintNavigation();
+            _menuManager.PrintNavigation();
 
             var input = Console.ReadLine();
-            ExecuteCommandIfExists(input!);
+            _commandExecutor.ExecuteCommandIfExists(input!);
         }
     }
 
     public void DisplayOptions()
     {
-        if (_currentState is MenuState menuState) menuState.DisplayOptions();
+        _optionsManager.DisplayOptions();
     }
 
     public void PrintOptions()
     {
-        var optionNum = 1;
-        foreach (string option in _options)
-        {
-            if(!string.IsNullOrEmpty(option))
-                Console.WriteLine(optionNum++ + ": " + option);
-            if (_amountOfOptions <= 3 && optionNum == 4)
-            {
-                return;
-            }
-        }
-    }
-
-    private void PrintNavigation()
-    {
-        for (int i = 0; i < _amountOfOptions; i++)
-        {
-            Console.Write(i + 1 + "\t");
-        }
-        Console.WriteLine();
-        for (int i = 1; i < _currentChoice; i++)
-        {
-            Console.Write("\t");
-        }
-        Console.WriteLine("|");
-
-        Console.WriteLine(_strings.Buttons);
-        DisplayUser(CurrentCustomer);
-    }
-    private void DisplayUser(Customer customer) => Console.WriteLine(customer != null ? $"Current user: {customer.Username}" : "Nobody logged in.");
-
-    private void ExecuteCommandIfExists(string input)
-    {
-        if (_commands.ContainsKey(input))
-        {
-            _commands[input].Execute();
-            _currentCommand = _commands[input];
-        }
-        else
-        {
-            Console.WriteLine(_strings.NotApplicable);
-        }
+        _optionsManager.PrintOptions();
     }
 
     public void ClearAllOptions()
     {
-        for (int i = 0; i < _options.Count; i++)
-        {
-            _options[i] = "";
-        }
+        _optionsManager.ClearAllOptions();
     }
     public void SetOptions(List<string> newOptions)
     {
-        _options.Clear();
-        _options.AddRange(newOptions);
+        _optionsManager.SetOptions(newOptions);
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace WebShopCleanCode
+﻿using WebShopCleanCode.Interfaces;
+
+namespace WebShopCleanCode
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            App app = new App(loggedInCustomer: true);
+            IApp app = new App(loggedInCustomer: true);
             app.Run();
             
             // Custom constructor:

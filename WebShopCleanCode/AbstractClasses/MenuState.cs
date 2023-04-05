@@ -1,3 +1,4 @@
+using WebShopCleanCode.Interfaces;
 using WebShopCleanCode.States.LoginStates;
 
 namespace WebShopCleanCode.AbstractClasses;
@@ -22,7 +23,7 @@ public abstract class MenuState : State
 
     protected virtual string DisplayMessage => _displayMessage;
 
-    public MenuState(App app, WebShop webShop) : base(app, webShop)
+    public MenuState(IApp app, WebShop webShop) : base(app, webShop)
     {
         
     }

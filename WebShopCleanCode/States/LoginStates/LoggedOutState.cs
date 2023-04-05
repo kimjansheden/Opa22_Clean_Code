@@ -7,7 +7,6 @@ public class LoggedOutState : LoginState
 {
     public LoggedOutState(App app) : base(app)
     {
-        
     }
 
     protected internal override void RequestHandle(State state)
