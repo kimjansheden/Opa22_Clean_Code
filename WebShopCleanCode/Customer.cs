@@ -18,8 +18,8 @@ namespace WebShopCleanCode
         public Customer(ICustomerInfo info)
         {
             _info = info;
-            _printer = new CustomerPrinter(this);
             _orders = new List<Order>();
+            _printer = new CustomerPrinter(this);
         }
 
         public bool CanAfford(int price)
@@ -34,16 +34,6 @@ namespace WebShopCleanCode
                 return true;
             }
             return password.Equals(_info.GetInfo<string>("Password"));
-        }
-
-        public void PrintInfo()
-        {
-            _printer.PrintInfo();
-        }
-
-        public void PrintOrders()
-        {
-            _printer.PrintOrders(_orders);
         }
     }
 }

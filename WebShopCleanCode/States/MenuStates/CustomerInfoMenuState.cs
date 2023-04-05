@@ -59,12 +59,12 @@ public class CustomerInfoMenuState : MenuState
 
     private void SeeInfo()
     {
-        CurrentCustomer.PrintInfo();
+        CurrentCustomer.Printer.PrintInfo();
         CurrentChoice = 1;
     }
 
     private void SeeOrders()
     {
-        CurrentCustomer.PrintOrders();
+        CurrentCustomer.Printer.PrintOrders();
     }
 }

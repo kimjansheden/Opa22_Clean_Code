@@ -5,10 +5,12 @@ namespace WebShopCleanCode.Helpers;
 public class CustomerPrinter : ICustomerPrinter
 {
     private readonly ICustomerInfo _info;
+    private readonly List<Order> _orders;
 
     public CustomerPrinter(Customer customer)
     {
         _info = customer.Info;
+        _orders = customer.Orders;
     }
     public void PrintInfo()
     {
@@ -46,10 +48,10 @@ public class CustomerPrinter : ICustomerPrinter
         Console.WriteLine();
     }
 
-    public void PrintOrders(List<Order> orders)
+    public void PrintOrders()
     {
         Console.WriteLine();
-        foreach (Order order in orders)
+        foreach (Order order in _orders)
         {
             order.PrintInfo();
         }
