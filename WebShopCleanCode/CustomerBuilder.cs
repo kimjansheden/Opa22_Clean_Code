@@ -4,6 +4,10 @@ using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode;
 
 // I decided to use the Builder Design Pattern here to separate the construction of the Customer from the interaction with the user.
+
+/// <summary>
+/// A builder class for constructing Customer objects.
+/// </summary>
 public class CustomerBuilder
 {
     private string? _password;
