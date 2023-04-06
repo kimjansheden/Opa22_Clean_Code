@@ -3,10 +3,12 @@ using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode.Commands;
 public class QuitCommand : ICommand
 {
-    private readonly App _app;
-    public QuitCommand(App app)
+    private IApp _app;
+
+    public ICommand Initialize(IApp app)
     {
         _app = app;
+        return this;
     }
     public void Execute()
     {

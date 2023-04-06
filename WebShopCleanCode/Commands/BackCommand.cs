@@ -4,10 +4,11 @@ using WebShopCleanCode.Interfaces;
 namespace WebShopCleanCode.Commands;
 public class BackCommand : ICommand
 {
-    private readonly App _app;
-    public BackCommand(App app)
+    private IApp _app;
+    public ICommand Initialize(IApp app)
     {
         _app = app;
+        return this;
     }
 
     private State LastState => (_app.StateHistory.Count != 0 ? _app.StateHistory[^1] : default)!;

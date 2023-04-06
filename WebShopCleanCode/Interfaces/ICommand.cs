@@ -4,4 +4,5 @@ namespace WebShopCleanCode.Interfaces;
 public interface ICommand
 {
     void Execute();
+    ICommand Initialize(IApp app);
 }

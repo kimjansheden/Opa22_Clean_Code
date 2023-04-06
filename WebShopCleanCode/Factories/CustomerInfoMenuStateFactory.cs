@@ -4,7 +4,7 @@ using WebShopCleanCode.States.MenuStates;
 
 namespace WebShopCleanCode.Factories;
 
-public class CustomerInfoMenuMenuStateFactory : IMenuStateFactory
+public class CustomerInfoMenuStateFactory : IMenuStateFactory
 {
     public MenuState CreateState(App app, WebShop webShop)
     {
