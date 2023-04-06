@@ -34,7 +34,7 @@ public class LoggedInState : LoginState
         AmountOfOptions = WebShop.Products.Count;
         for (int i = 0; i < AmountOfOptions; i++)
         {
-            Console.WriteLine(i + 1 + ": " + WebShop.Products[i].Name + ", " + WebShop.Products[i].Price + "kr");
+            Console.WriteLine(i + 1 + ": " + WebShop.Products[i].ProductName + ", " + WebShop.Products[i].ProductPrice + "kr");
         }
         Console.WriteLine("Your funds: " + CurrentCustomer.Info.GetInfo<int>("Funds"));
     }

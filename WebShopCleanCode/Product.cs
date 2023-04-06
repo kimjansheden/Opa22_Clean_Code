@@ -2,13 +2,13 @@
 {
     public class Product
     {
-        public string Name { get; set; }
-        public int Price { get; set; }
+        public string ProductName { get; }
+        public int ProductPrice { get; }
         public int NrInStock { get; set; }
-        public Product(string name, int price, int nrInStock)
+        public Product(string productName, int productPrice, int nrInStock)
         {
-            Name = name;
-            Price = price;
+            ProductName = productName;
+            ProductPrice = productPrice;
             NrInStock = nrInStock;
         }
         public bool InStock()
@@ -17,7 +17,7 @@
         }
         public void PrintInfo()
         {
-            Console.WriteLine(Name + ": " + Price + "kr, " + NrInStock + " in stock.");
+            Console.WriteLine(ProductName + ": " + ProductPrice + "kr, " + NrInStock + " in stock.");
         }
     }
 }

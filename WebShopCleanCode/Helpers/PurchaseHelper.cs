@@ -15,10 +15,10 @@ public class PurchaseHelper : IPurchaseHelper
     {
         if (product.InStock())
         {
-            if (currentCustomer.CanAfford(product.Price))
+            if (currentCustomer.CanAfford(product.ProductPrice))
             {
                 CompletePurchase(product, currentCustomer);
-                printMessageWithPadding(((DefaultStrings)_strings).Purchase.Success + product.Name);
+                printMessageWithPadding(((DefaultStrings)_strings).Purchase.Success + product.ProductName);
             }
             else
             {
@@ -34,9 +34,9 @@ public class PurchaseHelper : IPurchaseHelper
     private void CompletePurchase(Product product, Customer currentCustomer)
     {
         var currentFunds = currentCustomer.Info.GetInfo<int>("Funds");
-        var newFunds = currentFunds - product.Price;
+        var newFunds = currentFunds - product.ProductPrice;
         currentCustomer.Info.SetInfo<int>("Funds", newFunds);
         product.NrInStock--;
-        currentCustomer.Orders.Add(new Order(product.Name, product.Price, DateTime.Now));
+        currentCustomer.Orders.Add(new Order(product.ProductName, product.ProductPrice, DateTime.Now));
     }
 }
