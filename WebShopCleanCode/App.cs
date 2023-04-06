@@ -12,7 +12,8 @@ public class App : IApp
     private Dictionary<string, ICommand> _commands;
     private Dictionary<string, MenuState> _menuStates;
     private Dictionary<string, LoginState> _loginStates;
-    private Dictionary<string, IMenuStateFactory> _stateFactories;
+    private Dictionary<string, IMenuStateFactory> _menuStateFactories;
+    private Dictionary<string, ILoginStateFactory> _loginStateFactories;
     
     private List<string> _options;
     private string _username;
@@ -116,45 +117,46 @@ public class App : IApp
     /// Custom constructor.
     /// </summary>
     /// <param name="webShopFactory"></param>
+    /// <param name="menuManager"></param>
     /// <param name="optionsManager"></param>
     /// <param name="commandExecutor"></param>
     /// <param name="strings"></param>
+    /// <param name="loginStateFactories"></param>
     /// <param name="commands"></param>
     /// <param name="options"></param>
     /// <param name="quitCommands">Enter one och more quit commands.</param>
     /// <param name="startState"></param>
     /// <param name="startLoginState"></param>
-    /// <param name="menuStates"></param>
-    /// <param name="loginStates"></param>
-    /// <param name="menuStateFactories"></param>
-    /// <param name="menuManager"></param>
-    public App(IWebShopFactory webShopFactory, IMenuManager menuManager, IOptionsManager optionsManager, ICommandExecutor commandExecutor, Strings strings, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startState, LoginState startLoginState, Dictionary<string, MenuState> menuStates, Dictionary<string, LoginState> loginStates, Dictionary<string, IMenuStateFactory> menuStateFactories)
+    /// <param name="menuMenuStateFactories"></param>
+    public App(IWebShopFactory webShopFactory, IMenuManager menuManager, IOptionsManager optionsManager, ICommandExecutor commandExecutor, Strings strings, Dictionary<string, IMenuStateFactory> menuMenuStateFactories, Dictionary<string, ILoginStateFactory> loginStateFactories, Dictionary<string, ICommand> commands, List<string> options, string[] quitCommands, MenuState startState, LoginState startLoginState)
     {
+        CreateWebShop(defaultConstructor: false);
         _webShop = webShopFactory.CreateWebShop();
-        _menuManager = menuManager;
-        _optionsManager = optionsManager;
-        _commandExecutor = commandExecutor;
+        _menuManager = menuManager.Initialize(this);
+        _optionsManager = optionsManager.Initialize(this);
+        _commandExecutor = commandExecutor.Initialize(this);
         _strings = strings;
+        _menuStateFactories = menuMenuStateFactories;
+        _loginStateFactories = loginStateFactories;
         _commands = commands;
         _options = options;
-        _menuStates = menuStates;
-        _loginStates = loginStates;
         _quitCommands = quitCommands;
         _currentState = startState;
         _loginState = startLoginState;
-        _stateFactories = menuStateFactories;
-        CreateWebShop(defaultConstructor: false);
+
+        AddMenuStates();
+        AddLoginStates();
     }
-    
+
     /// <summary>
     /// Default constructor.
     /// </summary>
     public App()
     {
         IWebShopFactory webShopFactory = new DefaultWebShopFactory();
-        _menuManager = new MenuManager(this);
-        _optionsManager = new OptionsManager(this);
-        _commandExecutor = new CommandExecutor(this);
+        _menuManager = new MenuManager().Initialize(this);
+        _optionsManager = new OptionsManager().Initialize(this);
+        _commandExecutor = new CommandExecutor().Initialize(this);
         _webShop = webShopFactory.CreateWebShop();
         _strings = new DefaultStrings();
         _commands = new Dictionary<string, ICommand>();
@@ -168,28 +170,31 @@ public class App : IApp
 
     private void CreateDefaultStates()
     {
-        _stateFactories = new Dictionary<string, IMenuStateFactory>();
-        _stateFactories.Add("CustomerMenu", new CustomerInfoMenuMenuStateFactory());
-        _stateFactories.Add("LoginMenu", new LoginMenuStateFactory());
-        _stateFactories.Add("MainMenu", new MainMenuStateFactory());
-        _stateFactories.Add("PurchaseMenu", new PurchaseMenuStateFactory());
-        _stateFactories.Add("SortMenu", new SortMenuStateFactory());
-        _stateFactories.Add("WaresMenu", new WaresMenuStateFactory());
+        _menuStateFactories = new Dictionary<string, IMenuStateFactory>();
+        _menuStateFactories.Add("CustomerMenu", new CustomerInfoMenuMenuStateFactory());
+        _menuStateFactories.Add("LoginMenu", new LoginMenuStateFactory());
+        _menuStateFactories.Add("MainMenu", new MainMenuStateFactory());
+        _menuStateFactories.Add("PurchaseMenu", new PurchaseMenuStateFactory());
+        _menuStateFactories.Add("SortMenu", new SortMenuStateFactory());
+        _menuStateFactories.Add("WaresMenu", new WaresMenuStateFactory());
         
-        _loginStates = new Dictionary<string, LoginState>();
-        _loginStates.Add("LoggedIn", new LoggedInState(_webShop, this));
-        _loginStates.Add("LoggedOut", new LoggedOutState(this));
+        _loginStateFactories = new Dictionary<string, ILoginStateFactory>();
+        _loginStateFactories.Add("LoggedIn", new LoggedInStateFactory());
+        _loginStateFactories.Add("LoggedOut", new LoggedOutStateFactory());
         
-        _menuStates = new Dictionary<string, MenuState>();
-        _menuStates.Add("CustomerMenu", _stateFactories["CustomerMenu"].CreateState(this, _webShop));
-        _menuStates.Add("LoginMenu", _stateFactories["LoginMenu"].CreateState(this, _webShop));
-        _menuStates.Add("MainMenu", _stateFactories["MainMenu"].CreateState(this, _webShop));
-        _menuStates.Add("PurchaseMenu", _stateFactories["PurchaseMenu"].CreateState(this, _webShop));
-        _menuStates.Add("SortMenu", _stateFactories["SortMenu"].CreateState(this, _webShop));
-        _menuStates.Add("WaresMenu", _stateFactories["WaresMenu"].CreateState(this, _webShop));
+        AddLoginStates();
+        AddMenuStates();
         
         _currentState = _menuStates["MainMenu"];
         _loginState = _loginStates["LoggedOut"];
+    }
+
+    private void AddLoginStates()
+    {
+        foreach (var factory in _loginStateFactories)
+        {
+            _loginStates.Add(factory.Key, factory.Value.CreateState(this, _webShop));
+        }
     }
 
     private void CreateDefaultOptions()
@@ -246,6 +251,15 @@ public class App : IApp
         CurrentCustomer = _webShop.CurrentCustomer;
         _currentChoice = 1;
         _stateHistory = new List<State>();
+        _menuStates = new Dictionary<string, MenuState>();
+        _loginStates = new Dictionary<string, LoginState>();
+    }
+    private void AddMenuStates()
+    {
+        foreach (var factory in _menuStateFactories)
+        {
+            _menuStates.Add(factory.Key, factory.Value.CreateState(this, _webShop));
+        }
     }
 
     public void Run()

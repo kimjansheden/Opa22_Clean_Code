@@ -5,7 +5,6 @@ public class CustomerInfoMenuState : MenuState
 {
     public CustomerInfoMenuState(App app, WebShop webShop) : base(app, webShop)
     {
-        
     }
     protected internal override void Initialize()
     {

@@ -6,9 +6,10 @@ public class CommandExecutor : ICommandExecutor
 {
     private IApp _app;
 
-    public CommandExecutor(IApp app)
+    public ICommandExecutor Initialize(IApp app)
     {
         _app = app;
+        return this;
     }
 
     public void ExecuteCommandIfExists(string input)

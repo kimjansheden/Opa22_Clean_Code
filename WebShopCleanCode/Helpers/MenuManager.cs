@@ -4,15 +4,20 @@ namespace WebShopCleanCode.Helpers;
 
 public class MenuManager : IMenuManager
 {
-    private readonly IApp _app;
-
-    public MenuManager(IApp app)
+    private IApp? _app;
+    
+    public IMenuManager Initialize(IApp? app)
     {
         _app = app;
+        return this;
     }
 
     public void PrintNavigation()
     {
+        if (_app == null)
+        {
+            return;
+        }
         for (int i = 0; i < _app.AmountOfOptions; i++)
         {
             Console.Write(i + 1 + "\t");

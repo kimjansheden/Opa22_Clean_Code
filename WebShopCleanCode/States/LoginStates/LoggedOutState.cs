@@ -5,8 +5,9 @@ namespace WebShopCleanCode.States.LoginStates;
 
 public class LoggedOutState : LoginState
 {
-    public LoggedOutState(App app) : base(app)
+    public LoggedOutState(WebShop webShop, App app) : base(app, webShop)
     {
+        
     }
 
     protected internal override void RequestHandle(State state)

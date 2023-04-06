@@ -5,10 +5,12 @@ namespace WebShopCleanCode.Helpers;
 
 public class OptionsManager : IOptionsManager
 {
-    private readonly IApp _app;
-    public OptionsManager(IApp app)
+    private IApp _app;
+
+    public IOptionsManager Initialize(IApp app)
     {
         _app = app;
+        return this;
     }
 
     public void DisplayOptions()

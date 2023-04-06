@@ -6,4 +6,5 @@ public interface IOptionsManager
     void ClearAllOptions();
     void PrintOptions();
     void SetOptions(List<string> newOptions);
+    IOptionsManager Initialize(IApp app);
 }
