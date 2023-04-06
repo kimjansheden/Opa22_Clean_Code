@@ -6,5 +6,5 @@ public abstract class WebShop
     public virtual List<Customer> Customers { get; protected set; }
     public virtual List<Product> Products { get; protected set; }
     public abstract void Sort(Enum sortBy, bool order);
-    protected internal abstract void Initialize();
+    public abstract void Initialize();
 }
